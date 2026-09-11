@@ -1,0 +1,1832 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="An interactive classroom journey from Vostok Station into the Antarctic ice: ice cores as time machines, trapped air, 420,000 years of CO₂, and what we can do about it.">
+<meta name="theme-color" content="#0B1A44">
+<meta property="og:type" content="website">
+<meta property="og:title" content="The Ice Remembers">
+<meta property="og:description" content="An interactive classroom journey from Vostok Station into the Antarctic ice: ice cores, trapped air, 420,000 years of CO₂, and what we can do about it.">
+<meta property="og:image" content="https://planetfactory.in/preview.png">
+<meta property="og:url" content="https://planetfactory.in/">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230B1A44'/%3E%3Ccircle cx='32' cy='36' r='14' fill='%23BFE3FA'/%3E%3Ccircle cx='27' cy='31' r='4' fill='%23fff'/%3E%3C/svg%3E">
+<title>The Ice Remembers</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;900&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700&display=swap">
+<style>
+:root{
+  --sky-top:#0B1A44; --sky-mid:#3E4B93; --sun:#FFD79A;
+  --snow:#F4F9FC; --snow-2:#E3EEF6; --snow-3:#CBDDEA; --ice-shadow:#A6CBE0; --ice-mid:#5E9BC4; --ice-deep:#2B6C9B; --abyss:#123F63; --night:#0B1730;
+  --ink:#0F2238; --ink-soft:#3B556E; --muted:#6A88A2; --line:#B9D2E2;
+  --air:#3FA9F0; --air-soft:#C7E6FA; --gold:#F2B441; --ember:#EE5A2A; --warm:#F59E3A; --ok:#2C9C68;
+  --display:"Big Shoulders Display","Bebas Neue",Impact,"Arial Narrow Bold","Arial Narrow",sans-serif;
+  --body:"Atkinson Hyperlegible","Trebuchet MS",Verdana,sans-serif;
+  --mono:"JetBrains Mono","SF Mono",Menlo,Consolas,monospace;
+  --rail:64px;
+}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0}
+body{background:var(--snow);color:var(--ink);font-family:var(--body);font-size:clamp(14px,1.1vw,22px);line-height:1.45;overflow:hidden;-webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit;cursor:pointer}
+b,strong{font-weight:700}
+#deck{position:fixed;inset:0;overflow:hidden;background:var(--snow)}
+
+/* ---------- scenes ---------- */
+.scene{position:absolute;inset:0;overflow:hidden;padding:4vh 4vw 9vh calc(var(--rail) + 3.5vw);opacity:0;visibility:hidden;transform:translateY(3vh);transition:opacity .55s ease,transform .55s ease,visibility 0s linear .55s}
+.scene.active{opacity:1;visibility:visible;transform:none;transition-delay:0s}
+.scene.leaving{transform:translateY(-3vh)}
+.two{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);grid-template-rows:minmax(0,1fr);gap:3.5vw;height:100%;align-items:center}
+.copy{min-width:0;max-height:100%;overflow-y:auto;scrollbar-width:thin;padding-right:.5em}
+.visual{min-width:0;height:100%;contain:size;display:flex;align-items:center;justify-content:center}
+.copy h2,.chart-head h2{font-family:var(--display);font-weight:900;font-size:clamp(2.2rem,4.4vw,5rem);line-height:.95;letter-spacing:.005em;margin:0 0 .35em;text-wrap:balance;color:var(--ink)}
+.copy p{margin:0 0 .55em;max-width:36ch}
+.eyebrow{font-family:var(--mono);font-size:.68em;letter-spacing:.14em;text-transform:uppercase;color:var(--ice-deep);margin:0 0 1em;font-weight:700}
+.readout{display:flex;gap:2.2vw;margin:.9em 0 .6em;flex-wrap:wrap}
+.readout .v{font-family:var(--display);font-weight:900;font-size:clamp(1.8rem,3.4vw,3.8rem);line-height:1;color:var(--ice-deep);font-variant-numeric:tabular-nums;white-space:nowrap}
+.readout .v.small{font-size:clamp(1.5rem,2.8vw,3rem)}
+.readout .l{font-family:var(--mono);font-size:.66em;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-top:.35em}
+.btnrow{display:flex;gap:.6em;flex-wrap:wrap;margin-top:.9em}
+.btn{display:inline-flex;align-items:center;gap:.5em;border:2px solid var(--ice-deep);background:var(--snow);color:var(--ice-deep);border-radius:999px;padding:.55em 1.2em;font-weight:700;font-size:1em;line-height:1.1;transition:transform .12s,background .15s,color .15s,border-color .15s;white-space:nowrap}
+.btn:hover{transform:translateY(-1px);background:var(--snow-2)}
+.btn:active{transform:translateY(1px)}
+.btn.primary{background:var(--ice-deep);color:#fff}
+.btn.primary:hover{background:var(--abyss)}
+.btn.ember{border-color:var(--ember);color:var(--ember)}
+.btn.ember:hover{background:#FDECE5}
+.btn.ghost{border-color:var(--line);color:var(--ink-soft)}
+.btn.on{background:var(--gold);border-color:var(--gold);color:var(--ink)}
+.btn:disabled{opacity:.45;cursor:default;transform:none}
+.btn:focus-visible,button:focus-visible,input:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+.chips{display:flex;flex-wrap:wrap;gap:.4em;margin-top:.8em}
+.chip{border:2px solid var(--line);background:#fff;border-radius:999px;padding:.3em .85em;font-size:.8em;font-weight:700;color:var(--ink-soft)}
+.chip:hover{border-color:var(--ice-mid);color:var(--ice-deep)}
+.chip.on{background:var(--ice-deep);border-color:var(--ice-deep);color:#fff}
+.era{background:#fff;border-left:5px solid var(--gold);padding:.6em .9em;margin:.4em 0 1em;border-radius:0 8px 8px 0;box-shadow:0 2px 10px rgba(15,34,56,.06);min-height:3.2em}
+.era b{display:block;font-family:var(--display);font-size:1.5em;line-height:1;margin-bottom:.15em;color:var(--ink)}
+.slider-label{display:block;font-family:var(--mono);font-size:.7em;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:.4em 0 .4em}
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:14px;border-radius:7px;background:linear-gradient(90deg,var(--snow-3),var(--ice-deep));outline:none;margin:.2em 0}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:36px;height:36px;border-radius:50%;background:#fff;border:5px solid var(--ice-deep);box-shadow:0 2px 8px rgba(15,34,56,.3);cursor:grab}
+input[type=range]::-moz-range-thumb{width:28px;height:28px;border-radius:50%;background:#fff;border:5px solid var(--ice-deep);box-shadow:0 2px 8px rgba(15,34,56,.3);cursor:grab}
+.status{font-size:1.05em;min-height:2.9em;padding:.5em .9em;border-radius:8px;background:#fff;border:2px dashed var(--line);margin-top:.3em}
+.status.sealed{border-style:solid;border-color:var(--ok);background:#EAF7F0}
+.status.sealed b{color:var(--ok)}
+
+/* ---------- rail (the core itself) ---------- */
+.rail{position:absolute;left:0;top:0;bottom:0;width:var(--rail);display:flex;flex-direction:column;align-items:center;padding:4vh 0 4vh;z-index:5;pointer-events:none;gap:10px}
+.rail small{font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);writing-mode:vertical-rl;transform:rotate(180deg)}
+.core{position:relative;width:22px;flex:1;border-radius:11px;background:repeating-linear-gradient(180deg,var(--snow-2) 0 5px,var(--snow-3) 5px 7px);border:2px solid var(--line);overflow:visible}
+.core-fill{position:absolute;left:0;right:0;top:0;height:0;border-radius:9px 9px 0 0;background:linear-gradient(180deg,var(--ice-shadow),var(--ice-deep) 60%,var(--abyss));transition:height .6s ease;opacity:.95}
+.core-mark{position:absolute;left:-8px;width:34px;height:5px;background:var(--ember);border-radius:3px;box-shadow:0 0 0 2px var(--snow);transition:top .6s ease;top:0}
+.core-tick{position:absolute;left:24px;width:8px;height:2px;background:var(--line)}
+
+/* ---------- HUD ---------- */
+.hud{position:absolute;right:2vw;bottom:2.4vh;display:flex;align-items:center;gap:.45em;z-index:6}
+.hud button{width:2.5em;height:2.5em;border-radius:50%;border:2px solid var(--line);background:rgba(255,255,255,.88);color:var(--ink);display:grid;place-items:center;backdrop-filter:blur(6px);padding:0}
+.hud button svg{width:1.15em;height:1.15em;display:block}
+.hud button.on{background:var(--ice-deep);color:#fff;border-color:var(--ice-deep)}
+.hud button:hover{border-color:var(--ice-mid)}
+.hud .counter{font-family:var(--mono);font-size:.78em;color:var(--muted);margin:0 .5em;font-variant-numeric:tabular-nums;background:rgba(255,255,255,.7);padding:.2em .5em;border-radius:6px}
+.hud .arrow{width:3em;height:3em;background:var(--ice-deep);color:#fff;border-color:var(--ice-deep)}
+.hud .arrow:hover{background:var(--abyss)}
+.hud .arrow:disabled{opacity:.35}
+
+/* ---------- presenter notes ---------- */
+.notes{position:absolute;top:0;right:0;bottom:0;width:min(36rem,42vw);background:rgba(11,23,48,.97);color:#D8E6F2;padding:2.6rem 2rem 2rem;transform:translateX(102%);transition:transform .3s ease;z-index:7;overflow:auto;font-size:.82em;line-height:1.5;box-shadow:-10px 0 40px rgba(0,0,0,.25)}
+.notes.open{transform:none}
+.notes h3{font-family:var(--display);font-weight:900;font-size:2.2em;margin:0 0 .3em;color:#fff;line-height:1}
+.notes .k{font-family:var(--mono);font-size:.75em;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin:0 0 1em}
+.notes ul{padding-left:1.1em;margin:0 0 1em}
+.notes li{margin:.45em 0}
+.notes .keys{border-top:1px solid rgba(255,255,255,.15);padding-top:1em;margin-top:1.5em;color:#9FB6CA;font-size:.9em}
+.notes .close{position:absolute;top:1rem;right:1rem;border:1px solid rgba(255,255,255,.3);background:transparent;color:#fff;border-radius:999px;padding:.3em .8em;font-size:.85em}
+.notes kbd{font-family:var(--mono);background:rgba(255,255,255,.12);padding:.05em .4em;border-radius:4px;color:#fff}
+
+/* ---------- Scene 0: cover ---------- */
+.s-cover{padding:0}
+.s-cover .art{position:absolute;inset:0;width:100%;height:100%;display:block}
+.s-cover canvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.cover-text{position:absolute;left:calc(var(--rail) + 4.5vw);top:8vh;color:#fff;max-width:48vw}
+.cover-text .eyebrow{color:var(--sun)}
+.cover-text h1{font-family:var(--display);font-weight:900;font-size:clamp(4rem,9.2vw,11.5rem);line-height:.86;margin:.05em 0 .2em;letter-spacing:.01em;text-shadow:0 2px 30px rgba(5,12,40,.45)}
+.cover-text .lede{font-size:1.3em;max-width:26ch;margin:0 0 1.1em;text-shadow:0 1px 12px rgba(5,12,40,.5)}
+.cover-text .hint{display:inline-block;font-size:.78em;margin:.9em 0 0;font-family:var(--mono);letter-spacing:.04em;background:rgba(11,23,48,.55);padding:.35em .8em;border-radius:999px}
+.cover-text .btn.primary{background:var(--sun);border-color:var(--sun);color:var(--night);font-size:1.15em;padding:.6em 1.4em}
+.cover-text .btn.primary:hover{background:#FFE7BF}
+.facts{position:absolute;right:3.5vw;bottom:12vh;display:flex;flex-direction:column;gap:.7em;align-items:flex-end}
+.fact{background:rgba(11,23,48,.78);color:#fff;border-left:5px solid var(--sun);padding:.7em 1em .75em;width:31ch;max-width:40vw;opacity:0;transform:translateX(24px);transition:opacity .6s ease,transform .6s ease;backdrop-filter:blur(4px);border-radius:0 8px 8px 0}
+.fact.show{opacity:1;transform:none}
+.fact b{font-family:var(--display);font-size:1.9em;color:var(--sun);display:block;line-height:1;margin-bottom:.1em}
+
+/* ---------- Scene 1: time machine ---------- */
+#tmSvg{height:min(84vh,100%);width:auto;max-width:100%}
+#tmSvg text{font-family:var(--mono);fill:var(--muted);font-size:15px}
+#tmSvg .sampleT{font-family:var(--display);font-weight:900;fill:var(--ink);font-size:34px}
+#tmSvg .sampleS{font-size:13px;letter-spacing:.1em;fill:var(--muted)}
+
+/* ---------- Scene 2: snow column ---------- */
+.column-wrap{width:100%;height:min(86vh,100%)}
+#snCanvas{width:100%;height:100%;display:block}
+
+/* ---------- Scene 3: lab ---------- */
+.ppm-box{background:#fff;border:2px solid var(--line);border-radius:10px;padding:.7em .9em;max-width:36ch;margin-top:.6em}
+.ppm-box b{color:var(--ice-deep)}
+.samples{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1.6vw;align-items:stretch;width:100%}
+.sample{background:#fff;border:2px solid var(--line);border-radius:14px;padding:1.1em 1em 1em;display:flex;flex-direction:column;align-items:center;gap:.5em;text-align:center;position:relative;overflow:hidden}
+.sample .age{font-family:var(--display);font-weight:900;font-size:1.7em;line-height:1;color:var(--ink)}
+.sample .icewrap{width:100%;aspect-ratio:1/1.1;position:relative}
+.sample svg{width:100%;height:100%;display:block}
+.sample .crack{opacity:0;transition:opacity .2s}
+.sample.crushed .crack{opacity:1}
+.sample .bub{opacity:0}
+.sample.crushed .bub{animation:rise 1.6s ease-out forwards}
+.sample.crushed .bub:nth-child(2){animation-delay:.12s}.sample.crushed .bub:nth-child(3){animation-delay:.25s}.sample.crushed .bub:nth-child(4){animation-delay:.38s}.sample.crushed .bub:nth-child(5){animation-delay:.5s}.sample.crushed .bub:nth-child(6){animation-delay:.62s}
+@keyframes rise{0%{opacity:0;transform:translateY(0)}15%{opacity:1}100%{opacity:0;transform:translateY(-140px)}}
+.sample .reading{font-family:var(--display);font-weight:900;font-size:2.6em;line-height:1;color:var(--ice-deep);font-variant-numeric:tabular-nums;min-height:1em}
+.sample .reading small{font-family:var(--mono);font-size:.34em;letter-spacing:.1em;color:var(--muted);font-weight:500}
+.sample .note{font-size:.85em;color:var(--ink-soft);opacity:0;transition:opacity .5s;min-height:3.6em}
+.sample.done .note{opacity:1}
+.sample.crushed .btn{visibility:hidden}
+
+/* ---------- Scene 4: chart ---------- */
+.chart-scene{display:flex;flex-direction:column;height:100%;gap:1vh;min-width:0}
+.chart-head{display:flex;justify-content:space-between;align-items:flex-end;gap:2vw;flex-wrap:wrap}
+.chart-head h2{margin-bottom:.1em;font-size:clamp(1.8rem,3.4vw,3.8rem)}
+.chart-wrap{position:relative;flex:1;min-height:0;display:flex;justify-content:center}
+#chart{height:100%;width:auto;max-width:100%;display:block}
+#chart text{font-family:var(--mono);fill:var(--muted);font-size:15px}
+#chart .lbl{font-family:var(--body);fill:var(--ink-soft);font-size:16px}
+#chart .big{font-family:var(--display);font-weight:900;font-size:34px;fill:var(--ember)}
+#chart .warmL{font-family:var(--display);font-weight:700;font-size:18px;fill:var(--warm)}
+#chart .coldL{font-family:var(--display);font-weight:700;font-size:18px;fill:var(--ice-deep)}
+.tip{position:absolute;pointer-events:none;background:var(--night);color:#fff;padding:.5em .8em;border-radius:8px;font-size:.8em;line-height:1.35;white-space:nowrap;transform:translate(-50%,-115%);box-shadow:0 6px 20px rgba(0,0,0,.25)}
+.tip b{font-family:var(--display);font-size:1.5em;font-weight:900;display:block}
+.tip .tag{display:inline-block;margin-top:.25em;padding:.1em .5em;border-radius:999px;font-family:var(--mono);font-size:.8em;letter-spacing:.08em;text-transform:uppercase}
+.tip .tag.warm{background:var(--warm);color:var(--night)}.tip .tag.cold{background:var(--air-soft);color:var(--night)}.tip .tag.mid{background:#6f8ea6;color:#fff}
+.chart-note{margin:0;text-align:center;color:var(--ink-soft);min-height:1.5em}
+.chart-note b{color:var(--ember)}
+.chart-live{font-family:var(--mono);font-size:.78em;color:var(--muted);display:flex;gap:1.5em;justify-content:center}
+.chart-live b{color:var(--ice-deep);font-size:1.2em}
+
+/* ---------- Scene 5: worlds ---------- */
+.worlds .visual{align-items:center}
+#world{width:100%;height:auto;max-height:86vh;display:block;border-radius:16px;box-shadow:0 10px 40px rgba(15,34,56,.15)}
+#world text{font-family:var(--mono);fill:var(--ink);font-size:18px}
+#world .emoji{font-size:64px}
+#world .q{font-family:var(--display);font-weight:900;font-size:120px;fill:var(--ember)}
+.slider-scale{position:relative;height:2.4em;font-family:var(--mono);font-size:.68em;color:var(--muted);letter-spacing:.04em}
+.slider-scale span{position:absolute;top:.3em;transform:translateX(-50%);white-space:nowrap}
+.slider-scale span::before{content:"";position:absolute;left:50%;top:-.9em;width:2px;height:.6em;background:var(--line)}
+.slider-scale .end{color:var(--ember);font-weight:700;transform:none}
+.slider-scale .end::before{left:0}
+#wdSlider{background:linear-gradient(90deg,#9CC7E0 0%,#5E9BC4 30%,#F2B441 48%,#F59E3A 48%,#EE5A2A 100%)}
+.worlds .readout .v{transition:color .3s}
+.worlds .readout .v.hot,.readout .v.hot{color:var(--ember)}
+.sub{font-size:.8em;color:var(--muted);margin-top:-.4em;margin-bottom:.6em;font-family:var(--mono)}
+
+/* ---------- Scene 6: why so high ---------- */
+.readout.tight{margin-top:0;gap:1.6vw}
+#hs{width:100%;height:auto;max-height:86vh;display:block}
+#hs text{font-family:var(--mono);fill:var(--muted);font-size:16px}
+#hs .big{font-family:var(--display);font-weight:900;font-size:36px;fill:var(--ember)}
+#hs .era{transition:opacity .7s ease}
+#hs .smoke{animation:puff 3.2s linear infinite;transform-box:fill-box;transform-origin:center}
+@keyframes puff{0%{transform:translateY(0) scale(.5);opacity:.8}100%{transform:translateY(-70px) scale(1.8);opacity:0}}
+#hs .blades{animation:spin 6s linear infinite;transform-box:fill-box;transform-origin:center}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ---------- Scene 7: carbon cycle ---------- */
+#cycle{height:min(86vh,100%);width:auto;max-width:100%}
+#cycle text{font-family:var(--body);fill:var(--ink);font-size:20px}
+#cycle .node{font-family:var(--display);font-weight:900;font-size:30px;letter-spacing:.02em}
+#cycle .num{font-family:var(--mono);font-weight:700;font-size:19px;fill:var(--ink-soft)}
+#cycle .human{transition:opacity .6s}
+#cycle .cloud{transition:fill .8s}
+.status.bad{border-style:solid;border-color:var(--ember);background:#FDECE5}
+.status.bad b{color:var(--ember)}
+
+/* ---------- Scene 8: budget game board ---------- */
+.game-grid{display:grid;grid-template-columns:minmax(0,12fr) minmax(0,8fr);grid-template-rows:minmax(0,1fr);gap:2.2vw;height:100%}
+.board{display:flex;flex-direction:column;gap:.55em;min-width:0;min-height:0;overflow:hidden}
+.board-head h2{font-family:var(--display);font-weight:900;font-size:clamp(1.7rem,3.1vw,3.4rem);line-height:.95;margin:0 0 .15em;color:var(--ink)}
+.board-head .eyebrow{margin-bottom:.5em}
+.board-intro{margin:0;font-size:.88em;max-width:64ch;color:var(--ink-soft)}
+.board-intro b{color:var(--ink)}
+.rows{display:flex;flex-direction:column;gap:.32em}
+.row{display:grid;grid-template-columns:9.5em minmax(0,1fr);gap:.7em;align-items:center}
+.row-h{display:flex;align-items:center;gap:.4em;font-size:.84em;min-width:0}
+.row-h .ico{font-size:1.35em;flex:none}
+.row-h .nm{font-weight:700;line-height:1.05;min-width:0}
+.row-h .rv{font-family:var(--display);font-weight:900;font-size:1.9em;margin-left:auto;color:var(--ink);line-height:1;text-align:right;flex:none;font-variant-numeric:tabular-nums}
+.row-h .rv small{display:block;font-family:var(--mono);font-size:.38em;color:var(--muted);font-weight:500;letter-spacing:.04em}
+.row.done .rv{color:var(--ok)}
+.bar{display:flex;gap:4px}
+.chip{flex:1 1 0;min-width:4.4em;border:2px dashed var(--line);background:#fff;border-radius:9px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.1em;padding:.3em .3em .25em;font:inherit;color:var(--ink-soft);cursor:pointer;overflow:hidden;white-space:nowrap;transition:background .2s,border-color .2s,transform .1s}
+.chip .top{display:flex;align-items:center;gap:.3em}
+.chip:hover{border-color:var(--ice-mid);transform:translateY(-1px)}
+.chip:active{transform:translateY(1px)}
+.chip .ico{font-size:1.2em;flex:none;line-height:1}
+.chip .nm{font-size:.64em;font-weight:700;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.chip .n{font-family:var(--mono);font-size:.78em;font-weight:700;flex:none}
+.chip.on{border-style:solid;color:#fff}
+.chip.on.ready{background:var(--ok);border-color:var(--ok)}
+.chip.on.soon{background:var(--gold);border-color:var(--gold);color:var(--ink)}
+.chip.on.dream{background:var(--ice-mid);border-color:var(--ice-mid)}
+.chip.sel{box-shadow:0 0 0 3px var(--ember)}
+.detail{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:.9em;align-items:center;background:#fff;border:2px solid var(--line);border-radius:12px;padding:.55em .9em;min-height:5.4em}
+.detail.empty{grid-template-columns:1fr;border-style:dashed;color:var(--ink-soft);text-align:center}
+.detail .ico{font-size:2.3em;line-height:1}
+.detail .nm{font-family:var(--display);font-weight:900;font-size:1.45em;line-height:1;color:var(--ink)}
+.detail .nm .pill{margin-left:.5em;vertical-align:middle;font-size:.42em}
+.detail .how{font-size:.82em;color:var(--ink-soft);margin:.2em 0 .1em;line-height:1.3}
+.detail .india{font-family:var(--mono);font-size:.66em;color:var(--muted)}
+.detail .impact{font-family:var(--display);font-weight:900;font-size:2.3em;color:var(--ok);text-align:center;line-height:1;font-variant-numeric:tabular-nums}
+.detail .impact small{display:block;font-family:var(--mono);font-size:.28em;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;font-weight:500;margin-top:.3em}
+.board-foot{display:flex;justify-content:space-between;align-items:center;gap:1em;margin-top:auto}
+.legend{display:flex;gap:.4em;flex-wrap:wrap}
+.pill{display:inline-block;border-radius:999px;padding:.2em .7em;font-family:var(--mono);font-size:.62em;letter-spacing:.06em;text-transform:uppercase;font-weight:700}
+.pill.ready{background:#EAF7F0;color:var(--ok)}
+.pill.soon{background:#FDF3DC;color:#9A6A08}
+.pill.dream{background:#E3EEF6;color:var(--ice-deep)}
+.game-wrap{position:relative;height:100%;min-height:0;contain:size}
+#gameCanvas{width:100%;height:100%;display:block;border-radius:16px}
+.score{position:absolute;top:.8em;left:.8em;right:.8em;display:flex;gap:.4em;justify-content:space-between;pointer-events:none}
+.score .tile{background:rgba(255,255,255,.92);border-radius:10px;padding:.4em .4em;flex:1;text-align:center;min-width:0}
+.score .tile b{display:block;font-family:var(--display);font-weight:900;font-size:1.8em;line-height:1;color:var(--ink);font-variant-numeric:tabular-nums}
+.score .tile span{font-family:var(--mono);font-size:.52em;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);display:block;margin-top:.3em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.score .tile.air b{color:var(--ember)}
+.score .tile.air.zero b{color:var(--ok)}
+.verdict{position:absolute;left:.8em;right:.8em;bottom:.8em;text-align:center;font-weight:700;font-size:.95em;background:rgba(255,255,255,.92);border-radius:10px;padding:.5em .8em;pointer-events:none;transition:background .3s,color .3s}
+.verdict.win{background:#EAF7F0;color:var(--ok)}
+
+/* ---------- Scene 9: quiz + finale ---------- */
+.quiz{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1.4vw;width:100%}
+.qcard{background:#fff;border:2px solid var(--line);border-radius:14px;padding:1.2em 1.1em;display:flex;flex-direction:column;gap:.6em}
+.qcard .qn{font-family:var(--mono);font-size:.68em;letter-spacing:.14em;text-transform:uppercase;color:var(--ice-deep)}
+.qcard h3{font-family:var(--display);font-weight:900;font-size:1.9em;line-height:.98;margin:0 0 .3em;text-wrap:balance}
+.qcard button{text-align:left;border:2px solid var(--line);background:var(--snow);border-radius:10px;padding:.6em .8em;font-weight:700;color:var(--ink-soft);transition:background .15s,border-color .15s}
+.qcard button:hover{border-color:var(--ice-mid)}
+.qcard button.right{background:#EAF7F0;border-color:var(--ok);color:var(--ok)}
+.qcard button.wrong{background:#FDECE5;border-color:var(--ember);color:var(--ember)}
+.qcard.answered button{pointer-events:none}
+/* ---------- Scene 10: back to Vostok ---------- */
+.s-end{padding:0}
+.s-end .art{position:absolute;inset:0;width:100%;height:100%;display:block}
+.s-end canvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.end-panel{position:absolute;left:calc(var(--rail) + 4vw);top:50%;transform:translateY(-50%);width:min(44vw,42rem);background:rgba(11,23,48,.84);color:#EAF3F9;border-radius:18px;padding:1.6em 1.8em 1.5em;backdrop-filter:blur(10px);box-shadow:0 20px 60px rgba(0,0,0,.35);border:1px solid rgba(255,255,255,.12)}
+.end-panel .eyebrow{color:var(--sun)}
+.end-panel h2{font-family:var(--display);font-weight:900;font-size:clamp(1.9rem,3.6vw,4rem);line-height:.95;margin:0 0 .35em;color:#fff;text-wrap:balance}
+.end-panel p{margin:0 0 .7em;max-width:40ch;color:#DCE9F4}
+.end-panel .status{background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.3);color:#fff}
+.end-panel .status.sealed{background:rgba(44,156,104,.22);border-color:#6FD1A0}
+.end-panel .status.sealed b{color:#8CE8B8}
+.end-panel .btn{border-color:var(--sun);color:var(--sun);background:transparent}
+.end-panel .btn:hover{background:rgba(255,215,154,.12)}
+.end-panel .btn.primary{background:var(--sun);color:var(--night)}
+.end-panel .btn.primary:hover{background:#FFE7BF}
+.end-panel .btn.ghost{border-color:rgba(255,255,255,.35);color:#DCE9F4}
+.end-panel .btn:disabled{opacity:.45}
+.bury{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:1em;align-items:center;margin:.3em 0 .6em}
+.bury svg{width:100%;height:auto;display:block;background:rgba(255,255,255,.06);border-radius:12px}
+.bury svg text{font-family:var(--mono);font-size:13px;fill:#DCE9F4}
+.bury-read{display:flex;flex-direction:column;gap:.5em}
+.bury-read b{display:block;font-family:var(--display);font-weight:900;font-size:2.2em;line-height:1;color:#fff;font-variant-numeric:tabular-nums}
+.bury-read span{font-family:var(--mono);font-size:.66em;letter-spacing:.1em;text-transform:uppercase;color:#9FB6CA}
+.bury-state{font-family:var(--mono);font-size:.78em;color:var(--sun);min-height:2.4em}
+.bury-state.sealed{color:#8CE8B8;font-weight:700}
+.bubble-input{display:flex;align-items:center;gap:.5em;margin:.4em 0 .7em;flex-wrap:wrap}
+.bubble-input input{width:5.2em;font-family:var(--display);font-weight:900;font-size:2.4em;line-height:1;text-align:center;background:rgba(255,255,255,.08);border:2px solid rgba(255,255,255,.35);border-radius:12px;color:#fff;padding:.1em .2em;-moz-appearance:textfield}
+.bubble-input input::-webkit-outer-spin-button,.bubble-input input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+.bubble-input .unit{font-family:var(--mono);color:#9FB6CA;font-size:.8em;letter-spacing:.1em}
+.pledges{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.5em;margin:.2em 0 .7em}
+.pledge{display:flex;align-items:center;gap:.55em;text-align:left;border:2px solid rgba(255,255,255,.3);background:rgba(255,255,255,.06);color:#fff;border-radius:12px;padding:.6em .8em;font-weight:700;line-height:1.15;font-size:.92em}
+.pledge .ico{font-size:1.5em;flex:none}
+.pledge:hover{border-color:var(--sun)}
+.pledge.on{background:var(--sun);color:var(--night);border-color:var(--sun)}
+.end-line{font-family:var(--display);font-weight:900;font-size:1.9em;line-height:1.05;color:#fff;margin:.7em 0 .4em;max-width:none}
+.end-bubble{position:absolute;left:66vw;top:66vh;width:9.5em;height:9.5em;border-radius:50%;background:radial-gradient(circle at 35% 30%,rgba(255,255,255,.95),rgba(191,227,250,.85) 55%,rgba(63,169,240,.75));box-shadow:0 10px 40px rgba(15,34,56,.25),inset 0 -8px 20px rgba(43,108,155,.35);display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--ink);opacity:0;transform:translateY(0) scale(.6);transition:transform 1.4s ease,opacity .8s ease}
+.end-bubble b{font-family:var(--display);font-weight:900;font-size:2.3em;line-height:1}
+.end-bubble span{font-family:var(--mono);font-size:.8em;font-weight:700;color:var(--ice-deep)}
+.end-bubble.show{opacity:1;transform:translateY(-8vh) scale(1)}
+.end-bubble.sunk{opacity:0;transform:translateY(14vh) scale(.8);transition:transform 2.4s ease-in,opacity 2.2s ease-in}
+#endBubble2{left:78vw}
+
+@media (prefers-reduced-motion:reduce){
+  .scene,.fact,.core-fill,.core-mark,.notes{transition:none}
+  .sample.crushed .bub{animation:none;opacity:.6}
+  .end-bubble{transition:none}
+}
+@media (max-aspect-ratio:1/1){
+  .two{grid-template-columns:1fr;grid-template-rows:auto 1fr;align-items:start}
+  .samples,.quiz{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<div id="deck">
+
+<!-- ============ SCENE 0 : VOSTOK ============ -->
+<section class="scene s-cover active" id="s0" aria-label="Vostok Station">
+  <svg class="art" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+    <defs>
+      <linearGradient id="gSky" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#0B1A44"/><stop offset=".42" stop-color="#3E4B93"/><stop offset=".78" stop-color="#9C7FA6"/><stop offset="1" stop-color="#F0B58E"/>
+      </linearGradient>
+      <radialGradient id="gSun" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#FFE3B0" stop-opacity=".95"/><stop offset=".35" stop-color="#FFC98A" stop-opacity=".5"/><stop offset="1" stop-color="#FFC98A" stop-opacity="0"/></radialGradient>
+      <linearGradient id="gPlain" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#E6DAE2"/><stop offset=".22" stop-color="#DCEAF3"/><stop offset="1" stop-color="#F5FAFD"/></linearGradient>
+      <linearGradient id="gDrift" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#fff" stop-opacity=".85"/></linearGradient>
+    </defs>
+    <rect width="1600" height="900" fill="url(#gSky)"/>
+    <circle cx="1180" cy="556" r="280" fill="url(#gSun)"/>
+    <circle cx="1180" cy="556" r="44" fill="#FFE0A6"/>
+    <rect x="0" y="560" width="1600" height="340" fill="url(#gPlain)"/>
+    <g stroke="#A9CCE0" stroke-opacity=".5" fill="none" stroke-width="2" stroke-linecap="round">
+      <path d="M0 640 q120 -10 240 0 t260 -6 t300 8 t280 -4 t260 6 t260 -2"/>
+      <path d="M0 705 q160 -16 320 0 t320 -10 t340 12 t320 -6 t300 8"/>
+      <path d="M0 790 q200 -22 400 0 t400 -14 t420 16 t380 -8"/>
+      <path d="M0 870 q260 -26 520 0 t520 -18 t560 20"/>
+    </g>
+    <g fill="#B7CFE0" opacity=".6">
+      <polygon points="600,602 822,602 540,690 200,690"/>
+      <polygon points="872,602 918,602 690,780 630,780"/>
+      <polygon points="1100,602 1176,602 1040,660 960,660"/>
+    </g>
+    <g id="station">
+      <g fill="#232B45"><rect x="606" y="566" width="7" height="36"/><rect x="662" y="566" width="7" height="36"/><rect x="742" y="566" width="7" height="36"/><rect x="808" y="566" width="7" height="36"/></g>
+      <rect x="596" y="500" width="228" height="70" rx="4" fill="#2C3552"/>
+      <rect x="596" y="495" width="228" height="10" rx="3" fill="#3B4668"/>
+      <rect x="700" y="468" width="32" height="30" fill="#2C3552"/>
+      <g fill="#FFD27A"><rect x="616" y="522" width="18" height="14"/><rect x="650" y="522" width="18" height="14"/><rect x="684" y="522" width="18" height="14"/><rect x="718" y="522" width="18" height="14"/><rect x="752" y="522" width="18" height="14"/><rect x="786" y="522" width="18" height="14"/></g>
+      <polygon points="872,602 918,602 906,330 884,330" fill="#1D2438"/>
+      <g stroke="#3B4668" stroke-width="2"><line x1="882" y1="380" x2="908" y2="380"/><line x1="881" y1="430" x2="909" y2="430"/><line x1="879" y1="480" x2="911" y2="480"/><line x1="877" y1="530" x2="913" y2="530"/></g>
+      <rect x="840" y="556" width="110" height="46" rx="3" fill="#2C3552"/>
+      <rect x="852" y="570" width="14" height="10" fill="#FFD27A"/><rect x="874" y="570" width="14" height="10" fill="#FFD27A"/>
+      <line x1="520" y1="602" x2="520" y2="378" stroke="#1D2438" stroke-width="3"/>
+      <line x1="520" y1="380" x2="468" y2="602" stroke="#1D2438" stroke-width="1" opacity=".6"/>
+      <line x1="520" y1="380" x2="572" y2="602" stroke="#1D2438" stroke-width="1" opacity=".6"/>
+      <circle cx="520" cy="376" r="4" fill="#FF6A3D"/>
+      <line x1="1010" y1="602" x2="1010" y2="452" stroke="#1D2438" stroke-width="2"/>
+      <line x1="760" y1="602" x2="760" y2="440" stroke="#1D2438" stroke-width="3"/>
+      <g id="flag"><rect x="762" y="442" width="54" height="10" fill="#FFFFFF"/><rect x="762" y="452" width="54" height="10" fill="#2A55A8"/><rect x="762" y="462" width="54" height="10" fill="#D6323C"/></g>
+      <g fill="#3B4668"><rect x="1040" y="584" width="16" height="18" rx="3"/><rect x="1062" y="584" width="16" height="18" rx="3"/><rect x="1084" y="584" width="16" height="18" rx="3"/></g>
+      <rect x="1100" y="574" width="76" height="26" rx="5" fill="#2C3552"/><rect x="1094" y="596" width="88" height="8" rx="4" fill="#1D2438"/>
+      <ellipse cx="640" cy="604" rx="80" ry="9" fill="#fff"/><ellipse cx="900" cy="606" rx="100" ry="11" fill="#fff"/><ellipse cx="1130" cy="606" rx="70" ry="8" fill="#fff"/>
+    </g>
+    <rect x="0" y="566" width="1600" height="70" fill="url(#gDrift)" opacity=".55"/>
+  </svg>
+  <canvas id="snowfx" aria-hidden="true"></canvas>
+  <div class="cover-text">
+    <p class="eyebrow">Vostok Station · Antarctica · 78° South</p>
+    <h1>The Ice<br>Remembers</h1>
+    <p class="lede">Our journey begins at the coldest place on Earth.</p>
+    <button class="btn primary" id="btnBegin">Begin the journey</button>
+    <p class="hint" id="coverHint">Turn the sound up. Press Begin to hear the wind over the plain.</p>
+  </div>
+  <div class="facts" aria-live="polite">
+    <div class="fact"><b>−89 °C</b>The coldest temperature ever measured on Earth, right here (21 July 1983). Your freezer is only −18 °C.</div>
+    <div class="fact"><b>3.7 km of ice</b>Under our feet the ice is nearly four kilometres thick. Airplanes cruise at about 10 km.</div>
+    <div class="fact"><b>A hidden lake</b>Below all that ice lies Lake Vostok, a lake of liquid water five times bigger than Bengaluru.</div>
+  </div>
+</section>
+
+<!-- ============ SCENE 1 : TIME MACHINE ============ -->
+<section class="scene" id="s1" aria-label="The ice is a time machine">
+  <div class="two">
+    <div class="copy">
+      <p class="eyebrow">Stop 1 · The ice core</p>
+      <h2>The ice is a time machine</h2>
+      <p>At Vostok it is so cold that snow <b>never melts</b>. Every year a new layer lands on top of last year's. Layer on layer on layer, for hundreds of thousands of years.</p>
+      <p>Drill down, and you drill <b>back in time</b>.</p>
+      <div class="readout">
+        <div><div class="v" id="tmAge">Today</div><div class="l">years ago</div></div>
+        <div><div class="v" id="tmDepth">0 m</div><div class="l">deep</div></div>
+      </div>
+      <div class="era" id="tmEra"><b>You are here!</b>Fresh snow on top of the ice.</div>
+      <label class="slider-label" for="tmSlider">Drill down ▸</label>
+      <input type="range" id="tmSlider" min="0" max="1000" step="any" value="0" aria-label="Drill depth">
+      <div class="chips" id="tmChips"></div>
+    </div>
+    <div class="visual"><svg id="tmSvg" viewBox="0 0 560 780" aria-hidden="true"></svg></div>
+  </div>
+</section>
+
+<!-- ============ SCENE 2 : TRAPPING AIR ============ -->
+<section class="scene" id="s2" aria-label="How the air gets trapped">
+  <div class="two">
+    <div class="copy">
+      <p class="eyebrow">Stop 2 · Trapping the air</p>
+      <h2>How air gets trapped</h2>
+      <p>Fresh snow is fluffy. It is <b>mostly air</b>! As more snow lands on top, the old snow underneath gets squeezed… and squeezed…</p>
+      <p>Squeeze it enough and the air <b>can't escape</b>. It is sealed inside the ice as tiny bubbles. A time capsule of air!</p>
+      <div class="readout">
+        <div><div class="v" id="snYears">0</div><div class="l">years of snow</div></div>
+        <div><div class="v" id="snDepth">—</div><div class="l">our air is at</div></div>
+      </div>
+      <div class="status" id="snStatus">Press <b>Let it snow</b>. Watch the gold air at the top.</div>
+      <div class="btnrow">
+        <button class="btn primary" id="snAdd">❄ Let it snow</button>
+        <button class="btn" id="snAuto">Keep snowing</button>
+        <button class="btn ghost" id="snReset">Start again</button>
+      </div>
+    </div>
+    <div class="visual"><div class="column-wrap"><canvas id="snCanvas" aria-label="Snow turning into ice, layer by layer"></canvas></div></div>
+  </div>
+</section>
+
+<!-- ============ SCENE 3 : THE LAB ============ -->
+<section class="scene" id="s3" aria-label="Opening the bubbles">
+  <div class="two">
+    <div class="copy">
+      <p class="eyebrow">Stop 3 · The lab</p>
+      <h2>Opening the bubbles</h2>
+      <p>Scientists cut a slice of the core, crush it inside a sealed jar, and the ancient air <b>fizzes out</b>. Nobody has ever breathed this air. Not even a mammoth.</p>
+      <p>Then they measure it: how much <b>carbon dioxide (CO₂)</b> is in there?</p>
+      <div class="ppm-box"><b>ppm</b> means <b>parts per million</b>. Picture a million balloons of air. If 280 of them are CO₂, that's 280 ppm. Tiny! But CO₂ works like a blanket around the Earth.</div>
+    </div>
+    <div class="visual samples" id="samples"></div>
+  </div>
+</section>
+
+<!-- ============ SCENE 4 : THE GRAPH ============ -->
+<section class="scene" id="s4" aria-label="420,000 years of CO2">
+  <div class="chart-scene">
+    <div class="chart-head">
+      <div><p class="eyebrow">Stop 4 · 420,000 years of air</p><h2>Put all the bubbles in a row…</h2></div>
+      <div class="btnrow">
+        <button class="btn" id="chDraw">Draw it again</button>
+        <button class="btn primary" id="chTemp">Show temperature</button>
+        <button class="btn ember" id="chToday">And today?</button>
+      </div>
+    </div>
+    <div class="chart-live"><span>Years ago <b id="chLiveAge">—</b></span><span>CO₂ <b id="chLivePpm">—</b> ppm</span></div>
+    <div class="chart-wrap"><svg id="chart" viewBox="0 0 1000 590" aria-label="CO2 and temperature over 420,000 years"></svg><div class="tip" id="chTip" hidden></div></div>
+    <p class="chart-note" id="chNote">The line is CO₂ in the air, from 420,000 years ago (left) to today (right). Up and down, up and down… like breathing.</p>
+  </div>
+</section>
+
+<!-- ============ SCENE 5 : WORLDS ============ -->
+<section class="scene" id="s5" aria-label="What happens when CO2 goes up">
+  <div class="two worlds">
+    <div class="copy">
+      <p class="eyebrow">Stop 5 · Every time it got high…</p>
+      <h2 id="wdTitle">Ice age</h2>
+      <div class="readout">
+        <div><div class="v" id="wdPpm">180</div><div class="l">ppm CO₂</div></div>
+        <div><div class="v" id="wdTemp">−6 °C</div><div class="l">vs today</div></div>
+        <div><div class="v" id="wdSea">−120 m</div><div class="l">sea level</div></div>
+      </div>
+      <p class="sub" id="wdSub">&nbsp;</p>
+      <p id="wdText"></p>
+      <label class="slider-label" for="wdSlider">Slide the CO₂ up ▸</label>
+      <input type="range" id="wdSlider" min="180" max="430" value="180" aria-label="CO2 in parts per million">
+      <div class="slider-scale">
+        <span style="left:0%">180</span><span style="left:40%">280</span><span class="end" style="left:48%">300 · the ice's memory ends</span><span style="left:99%">428 today</span>
+      </div>
+    </div>
+    <div class="visual">
+      <svg id="world" viewBox="0 0 1200 640" aria-hidden="true">
+        <defs>
+          <clipPath id="iceClip"><rect id="iceClipRect" x="0" y="0" width="1200" height="470"/></clipPath>
+        </defs>
+        <rect id="wdSky" width="1200" height="640" fill="#9DB9D3"/>
+        <circle id="wdSun" cx="980" cy="120" r="54" fill="#FFD79A" opacity=".6"/>
+        <polygon id="wdMtn" points="0,380 140,250 300,340 430,190 560,330 700,230 830,340 960,200 1090,330 1200,300 1200,640 0,640" fill="#7F98B0"/>
+        <polygon points="0,380 140,250 300,340 430,190 560,330 700,230 830,340 960,200 1090,330 1200,300 1200,640 0,640" fill="#F4F9FC" clip-path="url(#iceClip)"/>
+        <polygon id="wdLand" points="0,640 0,470 200,445 400,470 600,432 800,462 1000,425 1200,450 1200,640" fill="#B9B3A2"/>
+        <g id="wdTrees"></g>
+        <text id="wdMammoth" class="emoji" x="250" y="455" text-anchor="middle">🦣</text>
+        <text id="wdHippo" class="emoji" x="700" y="455" text-anchor="middle" opacity="0">🦛</text>
+        <text id="wdQ" class="q" x="600" y="330" text-anchor="middle" opacity="0">?</text>
+        <rect id="wdSea" x="0" y="560" width="1200" height="80" fill="#2F7FB8" opacity=".88"/>
+        <line x1="0" y1="440" x2="1200" y2="440" stroke="#0F2238" stroke-dasharray="8 8" stroke-width="2" opacity=".5"/>
+        <text x="16" y="432" font-size="16" style="fill:#0F2238" opacity=".8">sea level today</text>
+        <text id="wdBridge" x="600" y="600" text-anchor="middle" style="fill:#fff" font-size="20" opacity="0">India ↔ Sri Lanka: dry land you could walk across</text>
+        <g id="wdTherm">
+          <rect x="1104" y="70" width="32" height="400" rx="16" fill="#fff" stroke="#0F2238" stroke-width="3"/>
+          <rect id="wdMerc" x="1112" y="330" width="16" height="140" rx="8" fill="#EE5A2A"/>
+          <circle cx="1120" cy="490" r="34" fill="#EE5A2A" stroke="#0F2238" stroke-width="3"/>
+          <text x="1150" y="106" font-size="16">+3</text><text x="1150" y="340" font-size="16">0</text><text x="1150" y="466" font-size="16">−6</text>
+          <text id="wdThermQ" x="1120" y="50" text-anchor="middle" font-size="40" style="fill:#EE5A2A" font-weight="700" opacity="0">?</text>
+        </g>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SCENE 6 : WHY SO HIGH ============ -->
+<section class="scene" id="s6" aria-label="Why did CO2 get so high">
+  <div class="two" style="grid-template-columns:minmax(0,4fr) minmax(0,8fr)">
+    <div class="copy">
+      <p class="eyebrow">Stop 6 · Why so high?</p>
+      <h2 id="hsTitle">Before the machines</h2>
+      <div class="readout">
+        <div><div class="v" id="hsYear">1750</div><div class="l">year</div></div>
+        <div><div class="v" id="hsPpm">277</div><div class="l">ppm CO₂</div></div>
+      </div>
+      <div class="readout tight">
+        <div><div class="v small" id="hsPop">0.8 billion</div><div class="l">people on Earth</div></div>
+        <div><div class="v small" id="hsEm">0</div><div class="l">billion tonnes CO₂ a year</div></div>
+      </div>
+      <p id="hsText"></p>
+      <label class="slider-label" for="hsSlider">Slide through time ▸</label>
+      <input type="range" id="hsSlider" min="1750" max="2026" step="1" value="1750" aria-label="Year">
+      <div class="chips" id="hsChips"></div>
+    </div>
+    <div class="visual"><svg id="hs" viewBox="0 0 1200 720" aria-hidden="true"></svg></div>
+  </div>
+</section>
+
+<!-- ============ SCENE 7 : THE CARBON CYCLE ============ -->
+<section class="scene" id="s7" aria-label="The carbon cycle">
+  <div class="two">
+    <div class="copy">
+      <p class="eyebrow">Stop 7 · The carbon cycle</p>
+      <h2>Nature breathes in… and out</h2>
+      <p>Plants breathe in CO₂ to grow. Animals, soil and fires breathe it out. The sea soaks it up and lets it go again. Every year about <b>770 billion tonnes</b> goes round and round.</p>
+      <p>In, out. In, out. For 10,000 years it balanced, and the line stayed flat.</p>
+      <div class="readout tight">
+        <div><div class="v small" id="ccIn">770</div><div class="l">billion tonnes up</div></div>
+        <div><div class="v small" id="ccOut">770</div><div class="l">billion tonnes down</div></div>
+        <div><div class="v small" id="ccNet">0</div><div class="l">stays in the air</div></div>
+      </div>
+      <div class="status" id="ccStatus"><b>Balanced.</b> What goes up comes back down.</div>
+      <div class="btnrow"><button class="btn primary" id="ccHuman">Add humans</button><button class="btn ghost" id="ccReset">Take them away</button></div>
+    </div>
+    <div class="visual"><svg id="cycle" viewBox="0 0 1000 720" aria-hidden="true"></svg></div>
+  </div>
+</section>
+
+<!-- ============ SCENE 8 : THE CARBON BUDGET GAME ============ -->
+<section class="scene" id="s8" aria-label="The carbon budget game">
+  <div class="game-grid">
+    <div class="board">
+      <div class="board-head">
+        <p class="eyebrow">Stop 8 · The carbon budget game</p>
+        <h2>Can you get to net zero?</h2>
+        <p class="board-intro">Every year we send about <b>40 billion tonnes</b> of CO₂ into the air. Forests and the sea mop up about half. Press a tool to put it to work. <b>The number on each tool is how much it cuts.</b></p>
+      </div>
+      <div class="rows" id="rows"></div>
+      <div class="detail" id="detail"></div>
+      <div class="board-foot">
+        <div class="legend"><span class="pill ready">Ready now</span><span class="pill soon">Getting better fast</span><span class="pill dream">Still being invented</span></div>
+        <button class="btn ghost" id="gmReset">Back to today</button>
+      </div>
+    </div>
+    <div class="game-wrap">
+      <canvas id="gameCanvas" aria-label="Where the CO2 comes from and where it goes"></canvas>
+      <div class="score">
+        <div class="tile"><b id="gmOut">40</b><span>out</span></div>
+        <div class="tile"><b id="gmForest">12</b><span>forests take</span></div>
+        <div class="tile"><b id="gmOcean">10</b><span>sea takes</span></div>
+        <div class="tile air" id="gmAirTile"><b id="gmAir">18</b><span>in the air</span></div>
+        <div class="tile air" id="gmPpmTile"><b id="gmPpm">+2.3</b><span>ppm / year</span></div>
+      </div>
+      <div class="verdict" id="gmVerdict">The air is filling up fast. Which tool will you use first?</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SCENE 9 : QUIZ + FINALE ============ -->
+<section class="scene" id="s9" aria-label="Quiz">
+  <div class="two" style="grid-template-columns:minmax(0,4fr) minmax(0,8fr)">
+    <div class="copy">
+      <p class="eyebrow">Stop 9 · Back to the surface</p>
+      <h2>Quick quiz!</h2>
+      <p>Hands up! Then one of you comes and presses the answer.</p>
+      <p class="sub" id="quizScore">0 of 4 answered</p>
+      <div class="btnrow"><button class="btn primary" id="quizNext" hidden>Back to Vostok ▸</button></div>
+    </div>
+    <div class="visual"><div class="quiz" id="quiz"></div></div>
+  </div>
+  </section>
+
+<!-- ============ SCENE 10 : BACK TO VOSTOK ============ -->
+<section class="scene s-end" id="s10" aria-label="Back to Vostok">
+  <svg class="art" id="endArt" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" aria-hidden="true"></svg>
+  <canvas id="snowfx2" aria-hidden="true"></canvas>
+  <div class="end-bubble" id="endBubble1"><b>2026</b><span>428 ppm</span></div>
+  <div class="end-bubble" id="endBubble2"><b>2050</b><span>?</span></div>
+  <div class="end-panel" id="endPanel">
+    <div class="end-step" data-step="1">
+      <p class="eyebrow">Stop 10 · Back to Vostok</p>
+      <h2>Right now, it is snowing here.</h2>
+      <p>This year's air is being buried under this year's snow. In about 3,000 years it seals into a bubble. Whoever drills it up will read what we did.</p>
+      <div class="bury">
+        <svg id="burySvg" viewBox="0 0 320 230" aria-hidden="true"></svg>
+        <div class="bury-read">
+          <div><b id="buryYear">2026</b><span>year</span></div>
+          <div><b id="buryDepth">0 m</b><span>deep</span></div>
+          <div class="bury-state" id="buryState">fresh snow · this year's air</div>
+        </div>
+      </div>
+      <div class="btnrow"><button class="btn primary" id="buryBtn">❄ Bury this year's air</button><button class="btn end-next" hidden>Your bubble ▸</button></div>
+    </div>
+    <div class="end-step" data-step="2" hidden>
+      <p class="eyebrow">Your bubble</p>
+      <h2>The year 2050. You are about 33.</h2>
+      <p>That year's snow will bury that year's air. What number will your bubble say?</p>
+      <div class="bubble-input">
+        <button class="btn" id="numDown" aria-label="Lower by 10">−10</button>
+        <input id="numIn" type="number" min="150" max="999" value="428" aria-label="ppm in 2050">
+        <span class="unit">ppm</span>
+        <button class="btn" id="numUp" aria-label="Raise by 10">+10</button>
+        <button class="btn primary" id="sealBtn">Seal it</button>
+      </div>
+      <div class="status" id="numReact">Today's bubble says <b>428</b>. Shout out a number!</div>
+      <div class="btnrow"><button class="btn end-next" hidden>One tool ▸</button></div>
+    </div>
+    <div class="end-step" data-step="3" hidden>
+      <p class="eyebrow">One tool</p>
+      <h2>Pick one tool you can push this week.</h2>
+      <div class="pledges" id="pledges"></div>
+      <div class="status" id="pledgeReact">Everyone picks one. Hands up when you have chosen.</div>
+      <p class="end-line" id="endLine" hidden>The ice remembers everything.<br>Now you know what it will remember.</p>
+      <div class="btnrow"><button class="btn ghost" id="btnRestart" hidden>Back to the beginning</button></div>
+    </div>
+  </div>
+</section>
+
+<!-- rail -->
+<aside class="rail" aria-hidden="true">
+  <small>surface</small>
+  <div class="core"><div class="core-fill" id="coreFill"></div><div class="core-mark" id="coreMark"></div></div>
+  <small>deep ice</small>
+</aside>
+
+<!-- HUD -->
+<nav class="hud" aria-label="Presentation controls">
+  <button id="btnNotes" title="Presenter notes (N)" aria-label="Presenter notes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 4h14v16H5z"/><path d="M9 9h6M9 13h6M9 17h3"/></svg></button>
+  <button id="btnSound" title="Wind on/off (M)" aria-label="Wind sound on or off"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10v4h4l5 4V6L8 10z"/><path id="sndWave" d="M16 9a4 4 0 0 1 0 6M19 6a8 8 0 0 1 0 12"/></svg></button>
+  <button id="btnFull" title="Fullscreen (F)" aria-label="Fullscreen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button>
+  <span class="counter"><span id="curScene">1</span> / 11</span>
+  <button class="arrow" id="btnPrev" title="Previous (←)" aria-label="Previous"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button>
+  <button class="arrow" id="btnNext" title="Next (→)" aria-label="Next"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg></button>
+</nav>
+
+<!-- presenter notes -->
+<aside class="notes" id="notes" aria-label="Presenter notes"></aside>
+
+</div>
+
+<script>
+(() => {
+'use strict';
+const $ = s => document.querySelector(s);
+const $$ = s => [...document.querySelectorAll(s)];
+const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const fmt = n => Math.round(n).toLocaleString('en-US');
+const clamp = (v,a,b) => Math.max(a, Math.min(b, v));
+const lerp = (a,b,t) => a + (b-a)*t;
+const ease = t => t<.5 ? 2*t*t : -1+(4-2*t)*t;
+
+/* ===================== WIND (Web Audio, synthesised) ===================== */
+const Wind = {
+  ctx:null, master:null, lp:null, bp:null, gLow:null, gBp:null,
+  level:0, gust:.3, gustTarget:.3, enabled:true,
+  init(){
+    if (this.ctx) return true;
+    const AC = window.AudioContext || window.webkitAudioContext; if (!AC) return false;
+    const ctx = this.ctx = new AC();
+    const len = ctx.sampleRate*4, buf = ctx.createBuffer(1,len,ctx.sampleRate), d = buf.getChannelData(0);
+    let b0=0,b1=0,b2=0,b3=0,b4=0,b5=0,b6=0;
+    for (let i=0;i<len;i++){ const w=Math.random()*2-1;
+      b0=0.99886*b0+w*0.0555179; b1=0.99332*b1+w*0.0750759; b2=0.96900*b2+w*0.1538520;
+      b3=0.86650*b3+w*0.3104856; b4=0.55000*b4+w*0.5329522; b5=-0.7616*b5-w*0.0168980;
+      d[i]=(b0+b1+b2+b3+b4+b5+b6+w*0.5362)*0.11; b6=w*0.115926; }
+    const src = ctx.createBufferSource(); src.buffer=buf; src.loop=true;
+    this.lp = ctx.createBiquadFilter(); this.lp.type='lowpass'; this.lp.frequency.value=320; this.lp.Q.value=.8;
+    this.bp = ctx.createBiquadFilter(); this.bp.type='bandpass'; this.bp.frequency.value=800; this.bp.Q.value=3;
+    this.gLow = ctx.createGain(); this.gLow.gain.value=.9;
+    this.gBp = ctx.createGain(); this.gBp.gain.value=.12;
+    this.out = ctx.createGain(); this.out.gain.value=1; this.out.connect(ctx.destination);
+    this.master = ctx.createGain(); this.master.gain.value=0;
+    src.connect(this.lp).connect(this.gLow).connect(this.master);
+    src.connect(this.bp).connect(this.gBp).connect(this.master);
+    this.master.connect(this.out);
+    src.start();
+    this.scheduleGust();
+    this.noise = buf;
+    Machines.init(ctx, buf, this.out); Nature.init(ctx, buf, this.out);
+    return true;
+  },
+  scheduleGust(){
+    const ctx=this.ctx, t=ctx.currentTime;
+    const g = Math.random()<.3 ? .75+Math.random()*.25 : .15+Math.random()*.45;
+    const ramp = .8+Math.random()*2.5;
+    this.gustTarget = g;
+    this.lp.frequency.setTargetAtTime(220+g*1100, t, ramp/3);
+    this.bp.frequency.setTargetAtTime(600+g*900, t, ramp/3);
+    this.gLow.gain.setTargetAtTime(.5+g*.6, t, ramp/3);
+    this.gBp.gain.setTargetAtTime(.03+g*.22, t, ramp/3);
+    setTimeout(()=>this.scheduleGust(), (ramp+1+Math.random()*3)*1000);
+  },
+  setLevel(v){
+    this.level=v; if(!this.ctx) return;
+    if (this.ctx.state==='suspended') this.ctx.resume();
+    this.master.gain.setTargetAtTime(v, this.ctx.currentTime, .6);
+  },
+  toggle(){ this.enabled=!this.enabled; if (this.out) this.out.gain.setTargetAtTime(this.enabled?1:0, this.ctx.currentTime, .15); return this.enabled; },
+  tick(dt){ this.gust += (this.gustTarget-this.gust)*Math.min(1,dt*.8); }
+};
+/* Machines: engine drone, steam chuffs, traffic hiss (Stop 6 onwards) */
+const Machines = {
+  ready:false, chuffOn:false, chuffRate:1.6,
+  init(ctx, noise, out){
+    if (this.ready) return; this.ready=true; this.ctx=ctx;
+    this.master=ctx.createGain(); this.master.gain.value=0; this.master.connect(out);
+    const lp=ctx.createBiquadFilter(); lp.type='lowpass'; lp.frequency.value=230; lp.Q.value=1.1;
+    this.gDrone=ctx.createGain(); this.gDrone.gain.value=0; lp.connect(this.gDrone).connect(this.master);
+    for (const [type,f,det] of [['sawtooth',55,0],['sawtooth',82.5,7],['square',27.5,0]]){ const o=ctx.createOscillator(); o.type=type; o.frequency.value=f; o.detune.value=det; o.connect(lp); o.start(); }
+    const lfo=ctx.createOscillator(); lfo.frequency.value=.33; const lg=ctx.createGain(); lg.gain.value=70; lfo.connect(lg).connect(lp.frequency); lfo.start();
+    const n1=ctx.createBufferSource(); n1.buffer=noise; n1.loop=true;
+    const bp=ctx.createBiquadFilter(); bp.type='bandpass'; bp.frequency.value=1100; bp.Q.value=.6;
+    this.gTraffic=ctx.createGain(); this.gTraffic.gain.value=0;
+    const swell=ctx.createGain(); swell.gain.value=1;
+    const lfo2=ctx.createOscillator(); lfo2.frequency.value=.08; const lg2=ctx.createGain(); lg2.gain.value=.35; lfo2.connect(lg2).connect(swell.gain); lfo2.start();
+    n1.connect(bp).connect(swell).connect(this.gTraffic).connect(this.master); n1.start();
+    const n2=ctx.createBufferSource(); n2.buffer=noise; n2.loop=true;
+    const bp2=ctx.createBiquadFilter(); bp2.type='bandpass'; bp2.frequency.value=650; bp2.Q.value=1.4;
+    this.env=ctx.createGain(); this.env.gain.value=0; this.gChuff=ctx.createGain(); this.gChuff.gain.value=0;
+    n2.connect(bp2).connect(this.env).connect(this.gChuff).connect(this.master); n2.start();
+    this.chuffLoop();
+  },
+  chuffLoop(){
+    const t=this.ctx.currentTime;
+    if (this.chuffOn){ const g=this.env.gain; g.cancelScheduledValues(t); g.setValueAtTime(.0001,t); g.exponentialRampToValueAtTime(1,t+.03); g.exponentialRampToValueAtTime(.0001,t+.22); }
+    setTimeout(()=>this.chuffLoop(), 1000/this.chuffRate);
+  },
+  set({drone=0,traffic=0,chuff=0,rate=1.6}={}, ramp=.9){
+    if (!this.ready) return; const t=this.ctx.currentTime;
+    this.gDrone.gain.setTargetAtTime(drone,t,ramp/3); this.gTraffic.gain.setTargetAtTime(traffic,t,ramp/3); this.gChuff.gain.setTargetAtTime(chuff,t,ramp/3);
+    this.chuffOn = chuff>.001; this.chuffRate=rate;
+  },
+  setLevel(v, ramp=1.2){ if (this.ready) this.master.gain.setTargetAtTime(v, this.ctx.currentTime, ramp/3); }
+};
+/* Nature: waves, breeze, birdsong */
+const Nature = {
+  ready:false, birds:0,
+  init(ctx, noise, out){
+    if (this.ready) return; this.ready=true; this.ctx=ctx;
+    this.master=ctx.createGain(); this.master.gain.value=0; this.master.connect(out);
+    const n=ctx.createBufferSource(); n.buffer=noise; n.loop=true;
+    const lp=ctx.createBiquadFilter(); lp.type='lowpass'; lp.frequency.value=420;
+    this.gWave=ctx.createGain(); this.gWave.gain.value=0;
+    const swell=ctx.createGain(); swell.gain.value=.6;
+    const lfo=ctx.createOscillator(); lfo.frequency.value=.11; const lg=ctx.createGain(); lg.gain.value=.4; lfo.connect(lg).connect(swell.gain); lfo.start();
+    n.connect(lp).connect(swell).connect(this.gWave).connect(this.master); n.start();
+    this.birdLoop();
+  },
+  chirp(){
+    const ctx=this.ctx, t=ctx.currentTime, o=ctx.createOscillator(), g=ctx.createGain(); o.type='sine';
+    const f0=2200+Math.random()*1600, notes=2+Math.floor(Math.random()*3);
+    o.connect(g).connect(this.master); g.gain.setValueAtTime(.0001,t);
+    for (let i=0;i<notes;i++){ const ts=t+i*.14; o.frequency.setValueAtTime(f0*(1+Math.random()*.15), ts); o.frequency.exponentialRampToValueAtTime(f0*(.8+Math.random()*.5), ts+.1); g.gain.exponentialRampToValueAtTime(.07,ts+.02); g.gain.exponentialRampToValueAtTime(.0001,ts+.12); }
+    o.start(t); o.stop(t+notes*.14+.05);
+  },
+  birdLoop(){ if (this.birds>0 && Math.random()<this.birds) this.chirp(); setTimeout(()=>this.birdLoop(), 350+Math.random()*1800); },
+  set({waves=0,birds=0}={}, ramp=.9){ if (!this.ready) return; this.gWave.gain.setTargetAtTime(waves, this.ctx.currentTime, ramp/3); this.birds=birds; },
+  setLevel(v, ramp=1.2){ if (this.ready) this.master.gain.setTargetAtTime(v, this.ctx.currentTime, ramp/3); }
+};
+/* One soundscape per stop: wind for the ice (stops 1–6), then the human world */
+const WIND_LEVEL = [ .95, .18, .16, .14, .12, .14, 0, 0, 0, .12, .95 ];
+const Sound = {
+  apply(n){
+    if (!Wind.ctx) return;
+    Wind.setLevel(WIND_LEVEL[n]);
+    if (n===6){ Machines.setLevel(.9); Nature.setLevel(.7); updateHSAudio(); }
+    else if (n===7){ Machines.setLevel(.9); Nature.setLevel(.8); Nature.set({waves:.9,birds:.7}); Machines.set(ccHumans? {drone:.16,traffic:.1} : {}); }
+    else if (n===8){ Machines.setLevel(.9); Nature.setLevel(.8); updateGameAudio(); }
+    else if (n===9){ Machines.setLevel(0); Nature.setLevel(.5); Nature.set({waves:.3,birds:.35}); }
+    else { Machines.setLevel(0); Nature.setLevel(0); }
+  },
+};
+function sfx(kind){
+  if (!Wind.ctx || !Wind.enabled) return;
+  const ctx=Wind.ctx, t=ctx.currentTime, o=ctx.createOscillator(), g=ctx.createGain();
+  o.connect(g).connect(ctx.destination);
+  if (kind==='blip'){ o.type='sine'; o.frequency.setValueAtTime(660,t); o.frequency.exponentialRampToValueAtTime(990,t+.08); g.gain.setValueAtTime(.001,t); g.gain.exponentialRampToValueAtTime(.09,t+.02); g.gain.exponentialRampToValueAtTime(.001,t+.18); o.start(t); o.stop(t+.2); }
+  else if (kind==='pop'){ o.type='triangle'; o.frequency.setValueAtTime(420,t); o.frequency.exponentialRampToValueAtTime(90,t+.12); g.gain.setValueAtTime(.001,t); g.gain.exponentialRampToValueAtTime(.16,t+.01); g.gain.exponentialRampToValueAtTime(.001,t+.16); o.start(t); o.stop(t+.18); }
+  else if (kind==='seal'){ o.type='sine'; o.frequency.setValueAtTime(523,t); o.frequency.setValueAtTime(784,t+.18); o.frequency.setValueAtTime(1047,t+.36); g.gain.setValueAtTime(.001,t); g.gain.exponentialRampToValueAtTime(.12,t+.03); g.gain.exponentialRampToValueAtTime(.001,t+.9); o.start(t); o.stop(t+.95); }
+  else if (kind==='rise'){ o.type='sawtooth'; const f=ctx.createBiquadFilter(); f.type='lowpass'; f.frequency.value=1200; o.disconnect(); o.connect(f).connect(g); o.frequency.setValueAtTime(160,t); o.frequency.exponentialRampToValueAtTime(1200,t+1.2); g.gain.setValueAtTime(.001,t); g.gain.exponentialRampToValueAtTime(.06,t+.1); g.gain.exponentialRampToValueAtTime(.001,t+1.4); o.start(t); o.stop(t+1.45); }
+  else if (kind==='good'){ o.type='sine'; o.frequency.setValueAtTime(660,t); o.frequency.setValueAtTime(880,t+.12); g.gain.setValueAtTime(.001,t); g.gain.exponentialRampToValueAtTime(.1,t+.02); g.gain.exponentialRampToValueAtTime(.001,t+.5); o.start(t); o.stop(t+.55); }
+  else if (kind==='bad'){ o.type='square'; o.frequency.setValueAtTime(220,t); o.frequency.exponentialRampToValueAtTime(140,t+.25); g.gain.setValueAtTime(.001,t); g.gain.exponentialRampToValueAtTime(.05,t+.02); g.gain.exponentialRampToValueAtTime(.001,t+.35); o.start(t); o.stop(t+.4); }
+}
+
+/* ===================== BLOWING SNOW ===================== */
+function SnowFX(canvas, opts={}){
+  const ctx = canvas.getContext('2d');
+  let w=0,h=0,parts=[],running=false,last=0;
+  const N = opts.n || 240;
+  function resize(){
+    const dpr=Math.min(2,window.devicePixelRatio||1);
+    w=canvas.clientWidth; h=canvas.clientHeight;
+    canvas.width=Math.max(1,w*dpr); canvas.height=Math.max(1,h*dpr); ctx.setTransform(dpr,0,0,dpr,0,0);
+    if (!parts.length) parts = Array.from({length:N}, () => spawn(true));
+  }
+  function spawn(anywhere){
+    const z=Math.random();
+    return { x: anywhere? Math.random()*w : w+20, y: Math.random()*h, z, r:.7+z*1.8, vx:-(1.2+z*3.2), vy:.15+Math.random()*.5, ph:Math.random()*6.28 };
+  }
+  function frame(t){
+    if (!running) return;
+    const dt=Math.min(.05,(t-last)/1000||.016); last=t;
+    Wind.tick(dt);
+    const g=Wind.gust;
+    ctx.clearRect(0,0,w,h);
+    for (const p of parts){
+      const sp = p.vx*(1+g*2.8)*dt*60;
+      p.x += sp; p.y += (p.vy + Math.sin(t/900+p.ph)*.3)*dt*60 + g*(p.y>h*.62? .6:.2)*dt*60;
+      if (p.x < -30 || p.y > h+10){ Object.assign(p, spawn(false)); if (Math.random()<.5) p.x=w+20; }
+      const streak = (p.y>h*.6 ? 1:.35) * (2+g*10) * p.z;
+      ctx.strokeStyle = `rgba(255,255,255,${.35+p.z*.5})`;
+      ctx.lineWidth = p.r; ctx.lineCap='round';
+      ctx.beginPath(); ctx.moveTo(p.x,p.y); ctx.lineTo(p.x+streak*4,p.y-streak*.15); ctx.stroke();
+    }
+    requestAnimationFrame(frame);
+  }
+  resize(); window.addEventListener('resize', resize);
+  return {
+    start(){ if (running||reduceMotion) return; running=true; last=performance.now(); resize(); requestAnimationFrame(frame); },
+    stop(){ running=false; }
+  };
+}
+
+/* ===================== DECK ENGINE ===================== */
+const scenes = $$('.scene');
+const N = scenes.length;
+let cur = 0;
+const hooks = {};
+function go(n){
+  if (n>N-1 && cur===N-1){ endNext(); return; }
+  n = clamp(n, 0, N-1); if (n===cur) return;
+  const from = cur; cur = n;
+  scenes[from].classList.remove('active'); scenes[from].classList.add('leaving');
+  setTimeout(()=>scenes[from].classList.remove('leaving'), 600);
+  scenes[n].classList.add('active');
+  hooks[from]?.leave?.(); hooks[n]?.enter?.();
+  $('#curScene').textContent = n+1;
+  $('#btnPrev').disabled = n===0; $('#btnNext').disabled = n===N-1;
+  const p = n/(N-1);
+  $('#coreFill').style.height = (p*100)+'%'; $('#coreMark').style.top = `calc(${p*100}% - 2px)`;
+  Sound.apply(n);
+  renderNotes();
+  document.activeElement?.blur?.();
+}
+function ensureAudio(){ if (Wind.init()) Sound.apply(cur); }
+
+$('#btnNext').onclick = () => { ensureAudio(); go(cur+1); };
+$('#btnPrev').onclick = () => { ensureAudio(); go(cur-1); };
+$('#btnFull').onclick = () => { if (document.fullscreenElement) document.exitFullscreen(); else document.documentElement.requestFullscreen?.(); };
+$('#btnSound').onclick = () => { ensureAudio(); const on = Wind.toggle(); $('#btnSound').classList.toggle('on', !on); $('#sndWave').style.opacity = on? 1:.25; };
+$('#btnNotes').onclick = () => { $('#notes').classList.toggle('open'); $('#btnNotes').classList.toggle('on'); };
+
+document.addEventListener('keydown', e => {
+  const tag = (e.target.tagName||'').toLowerCase();
+  const onControl = tag==='input' || tag==='button' || tag==='textarea';
+  if (e.key==='Escape'){ $('#notes').classList.remove('open'); $('#btnNotes').classList.remove('on'); return; }
+  if (['ArrowRight','ArrowDown','PageDown'].includes(e.key) || ((e.key===' '||e.key==='Enter') && !onControl)){ e.preventDefault(); ensureAudio(); go(cur+1); }
+  else if (['ArrowLeft','ArrowUp','PageUp'].includes(e.key)){ e.preventDefault(); ensureAudio(); go(cur-1); }
+  else if (e.key==='Home'){ go(0); } else if (e.key==='End'){ go(N-1); }
+  else if (e.key==='f'||e.key==='F'){ $('#btnFull').click(); }
+  else if (e.key==='n'||e.key==='N'){ $('#btnNotes').click(); }
+  else if (e.key==='m'||e.key==='M'){ $('#btnSound').click(); }
+});
+// after touching a slider, hand the arrow keys back to the deck
+$$('input[type=range]').forEach(r => r.addEventListener('pointerup', () => setTimeout(()=>r.blur(), 50)));
+// never let a focus() scroll the deck itself (only .copy may scroll)
+document.addEventListener('scroll', e => { const t=e.target; if (t && t.nodeType===1 && !t.classList.contains('copy') && (t.scrollTop||t.scrollLeft)){ t.scrollTop=0; t.scrollLeft=0; } }, true);
+// first click anywhere unlocks audio
+document.addEventListener('pointerdown', ensureAudio, {once:true});
+
+/* ===================== PRESENTER NOTES ===================== */
+const NOTES = [
+ ['Vostok Station','Set the scene',[
+  'Let the wind play for a few seconds before you speak. Ask: "Where do you think we are?"',
+  'Vostok is a Russian station in the middle of East Antarctica, 1,300 km from the coast, 3,488 m above sea level. About 25 people live there in summer, 13 in winter.',
+  'On 21 July 1983 the thermometer here read −89.2 °C, the coldest ever measured on the ground. Kids\' freezer at home: −18 °C.',
+  'Nothing grows. Almost nothing lives. It is a desert: less snow falls here in a year than rain falls in Bengaluru in one wet afternoon (about 2 cm of water a year).',
+  'Press <b>Begin the journey</b> to bring in the three facts. Lake Vostok: 250 km long, 50 km wide, under 4 km of ice, sealed off for millions of years.'
+ ]],
+ ['The time machine','Deeper = older',[
+  'Because it never melts, every year\'s snow stays. The ice under Vostok is a stack of about 400,000 winters.',
+  'The Vostok core was drilled to 3,623 m (1998). The ice down to about 3,310 m holds a clear record of 420,000 years. The world record is now 800,000 years (Dome C) and scientists are drilling for 1.2 million.',
+  'Let a child drag the slider. Ask "what was happening on Earth then?" before revealing the caption. The chips jump straight to good stops.',
+  'Depths are approximate: deep ice gets squashed thinner, so the bottom 600 m hold more years than the top 600 m.',
+  'Common question: "Can we reach the dinosaurs?" No. Dinosaurs were 66 million years ago; the oldest ice is under 2 million. For dinosaurs you need rocks, not ice.'
+ ]],
+ ['Trapping the air','The key idea of the whole talk',[
+  'Fresh snow is about 90% air. As layers pile on, the snow below is squeezed: snow → firn (packed, crunchy) → solid ice.',
+  'At Vostok the air channels finally close at about 95 m down. Below that, the air is trapped for good as bubbles.',
+  'Watch the gold air at the top: it is "our" air. Each press = 250 years of snowfall. After about 10 presses it seals.',
+  'Nice detail: the air is sealed thousands of years AFTER its snow fell, because the snow takes that long to reach 95 m. Scientists correct for this.',
+  'Ask: "Where does the air come from?" (It is simply the sky that day.) "Is it still there today?" (Yes, until someone melts the ice.)'
+ ]],
+ ['The lab','Crush, fizz, measure',[
+  'Cores are cut into 1-metre pieces, kept at −20 °C, and shipped in freezer containers. Slices are crushed in a vacuum so only ancient air comes out.',
+  'The instrument (a gas chromatograph or laser spectrometer) counts how many of every million air molecules are CO₂.',
+  'Let three children crush the three samples. Point out: the Ice Age sample has LESS CO₂ (185), the warm sample MORE (285).',
+  'ppm check: 280 ppm = 0.028%. If the whole class were the air (30 kids), CO₂ would be less than one fingernail of one child. Still, it traps heat like a blanket.'
+ ]],
+ ['420,000 years of air','Up and down, like breathing',[
+  'The line draws itself when you arrive; press <b>Draw it again</b> to replay. The readout shows the live year and value.',
+  'Shape: CO₂ swings between about 180 and 300 ppm, roughly every 100,000 years. Low = ice age, high = warm time. Four full cycles in this core.',
+  'Press <b>Show temperature</b>: Antarctic temperature from the same ice. They rise and fall together. Ask: "What do you notice?"',
+  'Press <b>And today?</b> last. Today (August 2026) the air is 427.6 ppm at Mauna Loa, Hawaii, and rising about 2 ppm every year. In 420,000 years of ice, it never passed 300.',
+  'Data: simplified from the Vostok core (Petit et al., 1999); today\'s value from NOAA. Hover the chart to read any point.'
+ ]],
+ ['Every time it got high…','What the high points meant',[
+  'Slide slowly. Low CO₂ (180): ice age. Ice 3 km thick over Canada and northern Europe, sea 120 m lower, so Palk Strait was dry land: you could walk to Sri Lanka.',
+  'High CO₂ (280–300): warm time. Ice pulled back to mountains and poles. Around 125,000 years ago the sea was 6–9 m higher than today and hippos lived in the Thames at London.',
+  'Past 300 the ice has no memory. We are at 428. Earth is already about 1.3 °C warmer than 150 years ago and the sea rises about 4 mm a year.',
+  'Keep it hopeful: ask "who decides what happens next?" (People do: energy, forests, the choices their generation makes.)'
+ ]],
+ ['Why did it get so high?','From wind to machines',[
+  'The wind is gone: from here on the sound follows the story. As you slide, steam chuffs arrive, then engines and traffic build as the line steepens.',
+  'Slide slowly. The line barely moves for 100 years, bends upward around 1900, then shoots up after 1950. Ask: "What happened?"',
+  'Coal, oil and gas are ancient sunshine: forests and sea creatures buried for 100–300 million years. Burning them releases carbon that had been locked away since before the dinosaurs.',
+  'Sources: CO₂ from Law Dome ice cores (Antarctica again!) until 1958, then Mauna Loa; population from UN estimates; emissions from the Global Carbon Project (fossil fuels and cement).',
+  'India hooks: first train 1853, Bombay to Thane; today India has the world\'s largest population and some of the biggest solar parks on Earth (Bhadla, Rajasthan).'
+ ]],
+ ['The carbon cycle','Nature\'s loop, and our extra',[
+  'Real numbers, rounded: plants take in about 440 billion tonnes of CO₂ a year and give back the same; the sea swaps about 330 each way. Nature\'s loop: 770 up, 770 down.',
+  'Press <b>Add humans</b>: our extra 40 a year (fossil fuels ~36, cement ~2, deforestation ~4). Forests take an extra ~12, the sea an extra ~10, and ~18 stays: that is the +2.3 ppm a year.',
+  'Key sentence: nature\'s breathing cancels out. Ours does not. It is the extra that matters.',
+  'Ask: "Why doesn\'t the sea just soak it all up?" It is trying: it takes a quarter, and it is turning slightly acidic, which is bad for shells and coral.'
+ ]],
+ ['The carbon budget game','Every tool, its size, and what it does',[
+  'The board is a picture of the whole 40 billion tonnes a year: six levers, and inside each lever every tool that can cut it. Wider tool = bigger cut. Values are billions of tonnes of CO₂ per year, rounded from 2024: power ~14, transport ~8, factories ~9, homes ~5, cutting forests ~4; forests soak up ~12, the sea ~10.',
+  'Let a different child press each tool. Before pressing, ask: "How could we make electricity without burning anything?" / "How could a car move without petrol?" The detail card explains it; the number on the right says how much it cuts.',
+  'Colours: green = you can buy it today; gold = it works and is getting cheaper fast; blue = still being invented, do not count on it. Notice that solar, wind and electric vehicles are the widest chips: they do most of the work.',
+  'Watch the picture: engines fade and birds return as emissions fall; the sky clears; the "stays in the air" tile turns green at net zero.',
+  'Realism check for you: forests and the sea keep taking ~22 a year only while CO₂ stays high. As the air cleans up they slow down, so real net zero means nearly zero from everything, plus new forests.',
+  'The idea to land: nearly every tool runs on electricity. So the plan is clean electricity first, then run everything on it. India builds solar faster than almost anyone, but coal still makes about three-quarters of its electricity.',
+  'Your own connection, if you want it: induction cooktops, BLDC fans and inverter ACs only sip power because of the electronics inside them, which is what Virtual Forest builds.',
+  'Scale check for the blue tools: the biggest CO₂-sucking plant today (Mammoth, Iceland) removes about 36,000 tonnes a year, which is what the world emits in about half a minute. What a 9-year-old can do: switch off, walk and cycle, plant and protect trees, talk to parents about solar on the roof.'
+ ]],
+ ['Back to the surface','Quiz as the recap',[
+  'Hands up, then one child presses. Wrong answers just turn orange; trying again is allowed.',
+  'When all four are answered a <b>Back to Vostok</b> button appears (or press →). The wind returns on the next stop.',
+  'Extra questions kids ask: Does anyone live at Vostok all winter? (Yes, about 13 people, in darkness for four months.) Is the lake water safe? (Untouched for millions of years; scientists are careful not to pollute it.)'
+ ]],
+ ['Back to Vostok','The close: three steps, then silence',[
+  'Let the wind play for five seconds before you speak. Same station, now at night, aurora overhead.',
+  'Step 1, <b>Bury this year\'s air</b> (or press →): the gold air sinks under this year\'s snow. At Vostok it takes about 3,000 years to reach 95 m and seal, so whoever drills it up around the year 4800 reads: 2026, 428 ppm.',
+  'Step 2, <b>Your bubble</b>: type what the class shouts and press Seal (Enter works). Honest ranges: every tool pressed → the line stops climbing around 440–450 by 2050 and then slowly comes down; middle of the road → about 500; nobody presses → 550 or more. The reaction text says this kindly.',
+  'Step 3, <b>One tool</b>: everyone picks one and puts a hand up. Keep it to what a nine-year-old controls: walking or cycling, switching off, trees, and asking parents about solar or induction.',
+  'Read the last line, then stop talking and let the wind run for a while. No thank-you slide.',
+  'Take-home for the teacher: each child draws their own bubble with their name, the year 2050, and the number they are aiming for.'
+ ]],
+];
+function renderNotes(){
+  const [title, k, items] = NOTES[cur];
+  $('#notes').innerHTML = `<p class="k">Presenter notes · ${cur+1} of ${N} · ${k}</p><h3>${title}</h3><ul>${items.map(i=>`<li>${i}</li>`).join('')}</ul>
+  <button class="close" onclick="document.getElementById('notes').classList.remove('open');document.getElementById('btnNotes').classList.remove('on')">✕ close</button>
+  <div class="keys"><kbd>→</kbd> <kbd>space</kbd> next · <kbd>←</kbd> back · <kbd>F</kbd> fullscreen · <kbd>M</kbd> wind · <kbd>N</kbd> these notes · <kbd>Esc</kbd> close</div>`;
+}
+
+/* ===================== SCENE 0 : COVER ===================== */
+const coverFX = SnowFX($('#snowfx'));
+let begun = false;
+$('#btnBegin').onclick = () => {
+  ensureAudio();
+  if (!begun){
+    begun = true;
+    Sound.apply(0);
+    $$('.fact').forEach((f,i)=> setTimeout(()=>f.classList.add('show'), 400+i*1400));
+    $('#btnBegin').textContent = 'Let\'s go down ▼';
+    $('#coverHint').textContent = 'Press → at any time to move on.';
+  } else go(1);
+};
+hooks[0] = { enter(){ coverFX.start(); }, leave(){ coverFX.stop(); } };
+coverFX.start();
+
+/* ===================== SCENE 1 : TIME MACHINE ===================== */
+const AGE_MAX = 420000;
+const DEPTH_TABLE = [[0,0],[2000,70],[5000,150],[10000,260],[20000,420],[50000,800],[100000,1400],[130000,1850],[240000,2700],[340000,3060],[420000,3310]];
+const tToAge = t => AGE_MAX*Math.pow(t/1000,3);
+const ageToT = a => 1000*Math.cbrt(a/AGE_MAX);
+function depthAt(age){
+  for (let i=1;i<DEPTH_TABLE.length;i++){ const [a0,d0]=DEPTH_TABLE[i-1],[a1,d1]=DEPTH_TABLE[i]; if (age<=a1) return lerp(d0,d1,(age-a0)/(a1-a0)); }
+  return 3310;
+}
+const ERAS = [
+ {age:0,     chip:'Today',            title:'You are here!', text:'Fresh snow on top of the ice. This year\'s air is being buried right now.'},
+ {age:100,   chip:'100 years',        title:'100 years ago', text:'Your great-great-grandparents were children. No TV, no phones, hardly any cars.'},
+ {age:1000,  chip:'Chola kings',      title:'1,000 years ago', text:'Raja Raja Chola rules the south of India and builds the great temple at Thanjavur. Knights and castles in Europe.'},
+ {age:2000,  chip:'Romans',           title:'2,000 years ago', text:'The Roman Empire is at its biggest. The Great Wall of China is already old.'},
+ {age:5000,  chip:'First writing',    title:'5,000 years ago', text:'People have just invented writing and the wheel. The pyramids of Egypt are about to be built.'},
+ {age:10000, chip:'First farmers',    title:'10,000 years ago', text:'The very first farmers plant the very first crops. Before this, everyone hunted and gathered.'},
+ {age:20000, chip:'Ice Age',          title:'20,000 years ago · the Ice Age', text:'Mammoths roam. Ice 3 km thick covers Canada and northern Europe. The sea is 120 m lower: you could walk from India to Sri Lanka.'},
+ {age:50000, chip:'Neanderthals',     title:'50,000 years ago', text:'Neanderthals, our cousins, still live in Europe. People are just arriving in Australia.'},
+ {age:130000,chip:'Hippos in London', title:'130,000 years ago · a warm time', text:'Warmer than today. Hippos wallow in the River Thames, in London!'},
+ {age:300000,chip:'First humans',     title:'300,000 years ago', text:'The very first people like us, Homo sapiens, appear in Africa.'},
+ {age:420000,chip:'The bottom',       title:'420,000 years ago', text:'The bottom of the record. Before anyone like us existed. And this is not even the oldest ice: a core at Dome C reaches 800,000 years.'},
+];
+const tmSvg = $('#tmSvg'), tmSlider = $('#tmSlider');
+function buildTM(){
+  const top=40, bot=740, x=170, w=120;
+  let s = `<defs><linearGradient id="gCore" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F4F9FC"/><stop offset=".25" stop-color="#CBDDEA"/><stop offset=".6" stop-color="#5E9BC4"/><stop offset="1" stop-color="#123F63"/></linearGradient>
+  <linearGradient id="gSamp" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#DCEBF4"/><stop offset=".5" stop-color="#F4F9FC"/><stop offset="1" stop-color="#C9DDEA"/></linearGradient></defs>`;
+  s += `<rect x="${x-14}" y="${top-16}" width="${w+28}" height="14" rx="4" fill="#DCEBF4"/>`;
+  s += `<rect x="${x}" y="${top}" width="${w}" height="${bot-top}" rx="14" fill="url(#gCore)" stroke="#B9D2E2" stroke-width="2"/>`;
+  // annual layers: thinner with depth
+  let y=top+8, gap=9;
+  while (y<bot-6){ s += `<line x1="${x+4}" y1="${y.toFixed(1)}" x2="${x+w-4}" y2="${y.toFixed(1)}" stroke="#0F2238" stroke-opacity=".12" stroke-width="1"/>`; gap = Math.max(2.2, gap*.965); y += gap; }
+  // depth ticks
+  for (let d=0; d<=3000; d+=500){ const yy = top+(bot-top)*d/3310; s += `<line x1="${x-30}" y1="${yy}" x2="${x-8}" y2="${yy}" stroke="#B9D2E2" stroke-width="2"/><text x="${x-38}" y="${yy+5}" text-anchor="end">${d} m</text>`; }
+  s += `<text x="${x-38}" y="${bot+2}" text-anchor="end" font-weight="700">3,310 m</text>`;
+  s += `<text x="${x+w/2}" y="${top-28}" text-anchor="middle" font-weight="700" style="fill:#2B6C9B">SURFACE</text>`;
+  // cable + drill + highlight + sample card
+  s += `<line id="tmCable" x1="${x+w/2}" y1="0" x2="${x+w/2}" y2="${top}" stroke="#0F2238" stroke-width="3"/>`;
+  s += `<rect id="tmBand" x="${x}" y="${top}" width="${w}" height="16" fill="#F2B441" opacity=".9"/>`;
+  s += `<polygon id="tmDrill" points="${x+w/2-22},${top-4} ${x+w/2+22},${top-4} ${x+w/2+14},${top+14} ${x+w/2-14},${top+14}" fill="#0F2238"/>`;
+  s += `<g id="tmSample" transform="translate(340,${top})"><line x1="-50" y1="8" x2="0" y2="8" stroke="#F2B441" stroke-width="3" stroke-dasharray="6 5"/>
+    <rect x="0" y="-30" width="190" height="120" rx="14" fill="#fff" stroke="#B9D2E2" stroke-width="2"/>
+    <rect x="16" y="-14" width="36" height="88" rx="10" fill="url(#gSamp)" stroke="#A6CBE0"/>
+    <circle cx="28" cy="10" r="3" fill="#3FA9F0" opacity=".8"/><circle cx="40" cy="30" r="2.5" fill="#3FA9F0" opacity=".8"/><circle cx="26" cy="52" r="2" fill="#3FA9F0" opacity=".8"/><circle cx="42" cy="62" r="3" fill="#3FA9F0" opacity=".8"/>
+    <text class="sampleS" x="66" y="8">ICE FROM</text><text id="tmSampleT" class="sampleT" x="66" y="48">Today</text><text id="tmSampleT2" class="sampleS" x="66" y="70">FRESH SNOW</text></g>`;
+  tmSvg.innerHTML = s;
+  // era chips
+  $('#tmChips').innerHTML = ERAS.map((e,i)=>`<button class="chip" data-i="${i}">${e.chip}</button>`).join('');
+  $$('#tmChips .chip').forEach(c => c.onclick = () => { ensureAudio(); sfx('blip'); animateSlider(tmSlider, ageToT(ERAS[+c.dataset.i].age), updateTM); });
+}
+let sliderAnim = null;
+function animateSlider(slider, target, onUpdate){
+  cancelAnimationFrame(sliderAnim);
+  const from=+slider.value, t0=performance.now(), dur = reduceMotion? 0 : 700;
+  const step = now => { const p = dur? Math.min(1,(now-t0)/dur):1; slider.value = lerp(from,target,ease(p)); onUpdate(); if (p<1) sliderAnim=requestAnimationFrame(step); };
+  step(t0);
+}
+function nearestEra(age){
+  let best=ERAS[0], bd=Infinity;
+  for (const e of ERAS){ const d = Math.abs(Math.log10(age+30)-Math.log10(e.age+30)); if (d<bd){bd=d;best=e;} }
+  return best;
+}
+function updateTM(){
+  const age = tToAge(+tmSlider.value), depth = depthAt(age);
+  $('#tmAge').textContent = age<50 ? 'Today' : fmt(age); $('#tmAge').nextElementSibling.textContent = age<50 ? 'right now' : 'years ago';
+  $('#tmDepth').textContent = (depth<1? '0' : '≈ '+fmt(depth)) + ' m';
+  const e = nearestEra(age);
+  $('#tmEra').innerHTML = `<b>${e.title}</b>${e.text}`;
+  $$('#tmChips .chip').forEach(c => c.classList.toggle('on', ERAS[+c.dataset.i]===e));
+  const top=40, bot=740, y = top + (bot-top)*depth/3310;
+  $('#tmCable').setAttribute('y2', y);
+  $('#tmBand').setAttribute('y', y-2);
+  const d=$('#tmDrill'); d.setAttribute('transform', `translate(0,${y-top})`);
+  $('#tmSample').setAttribute('transform', `translate(340,${clamp(y, 70, 680)})`);
+  $('#tmSampleT').textContent = age<50? 'Today' : fmt(age);
+  $('#tmSampleT2').textContent = age<50 ? 'FRESH SNOW' : 'YEARS AGO';
+}
+buildTM(); updateTM();
+tmSlider.addEventListener('input', () => { cancelAnimationFrame(sliderAnim); updateTM(); });
+
+/* ===================== SCENE 2 : SNOW → ICE ===================== */
+const snCanvas = $('#snCanvas'), snCtx = snCanvas.getContext('2d');
+const Snow = {
+  layers:[], years:0, auto:false, autoT:0, sealed:false, running:false, last:0, flakes:[],
+  MAXD:130, T0:15, LAYER_YEARS:250, CLOSE:95,
+  W:0, H:0, colX:0, colW:0, top:0, S:1,
+  resize(){
+    const dpr=Math.min(2,window.devicePixelRatio||1);
+    this.W=snCanvas.clientWidth; this.H=snCanvas.clientHeight;
+    snCanvas.width=Math.max(1,this.W*dpr); snCanvas.height=Math.max(1,this.H*dpr); snCtx.setTransform(dpr,0,0,dpr,0,0);
+    this.top = 56; this.S = (this.H-this.top-30)/this.MAXD;
+    this.colW = Math.min(this.W*.36, 300); this.colX = Math.max(90, (this.W - this.colW - 230)/2);
+  },
+  reset(){
+    this.layers=[]; this.years=0; this.sealed=false; this.auto=false; this.flakes=[];
+    $('#snAuto').classList.remove('on'); $('#snAuto').textContent='Keep snowing';
+    $('#snYears').textContent='0'; $('#snDepth').textContent='—';
+    const st=$('#snStatus'); st.className='status'; st.innerHTML='Press <b>Let it snow</b>. Watch the gold air at the top.'; delete st.dataset.k;
+    $('#snAdd').disabled=false;
+  },
+  add(quiet){
+    if (this.layers.length && this.layers[this.layers.length-1].top > this.MAXD) return;
+    const pockets = Array.from({length:16}, ()=>({u:.08+Math.random()*.84, v:.1+Math.random()*.8, s:.75+Math.random()*.5, r:Math.random()*6.28}));
+    this.layers.unshift({ t0:this.T0, thick:0, top:0, pockets, tracer: this.layers.length===0 });
+    this.years += this.LAYER_YEARS;
+    $('#snYears').textContent = fmt(this.years);
+    for (let i=0;i<34;i++) this.flakes.push({x:this.colX+Math.random()*this.colW, y:-10-Math.random()*this.H*.35, v:2.2+Math.random()*2.5, r:1.5+Math.random()*2.5, life:1});
+    if (!quiet) sfx('blip');
+  },
+  update(dt){
+    let depth=0;
+    for (const L of this.layers){
+      const target = L.t0*(.34+.66*Math.exp(-depth/38));
+      L.thick += (target-L.thick)*Math.min(1,dt*3.2);
+      L.top = depth; depth += L.thick;
+    }
+    this.flakes.forEach(f => { f.y += f.v*dt*60; if (f.y > this.top-2) f.life -= dt*6; });
+    this.flakes = this.flakes.filter(f => f.life>0);
+    const tr = this.layers.find(l=>l.tracer);
+    if (tr){
+      const mid = tr.top + tr.thick/2;
+      $('#snDepth').textContent = '≈ '+Math.round(mid)+' m';
+      const st=$('#snStatus');
+      const key = mid>this.MAXD?'gone':mid>=this.CLOSE?'ice':mid>20?'firn':mid>.5?'snow':'';
+      if (key && key!==st.dataset.k){
+        st.dataset.k = key;
+        if (key==='gone'){ if (this.auto) this.toggleAuto(); st.innerHTML='<b>Sealed and sinking.</b> Every new layer pushes it deeper. It will reach the bottom of the core in about 400,000 years.'; $('#snAdd').disabled=true; }
+        else if (key==='ice'){ if (!this.sealed){ this.sealed=true; sfx('seal'); } st.className='status sealed'; st.innerHTML='<b>Sealed!</b> At about 95 m the air can no longer escape. It is a time capsule now. It took about '+fmt(this.years)+' years of snow to seal it.'; }
+        else if (key==='firn'){ st.className='status'; st.innerHTML='<b>Squeezed snow (firn).</b> The grains are packed tight. The air is nearly trapped…'; }
+        else { st.className='status'; st.innerHTML='<b>Fluffy snow.</b> Mostly air. It can still blow in and out.'; }
+      }
+    }
+    if (this.auto){ this.autoT += dt; if (this.autoT>.75){ this.autoT=0; this.add(true); } }
+  },
+  draw(){
+    const c=snCtx, W=this.W, H=this.H, x=this.colX, w=this.colW, top=this.top, S=this.S;
+    c.clearRect(0,0,W,H);
+    // sky above surface
+    c.fillStyle='#DCEAF3'; c.fillRect(x-2, 0, w+4, top);
+    // column background (ice) & clip
+    c.save(); c.beginPath(); c.rect(x, top, w, this.MAXD*S); c.clip();
+    c.fillStyle='#EAF3F9'; c.fillRect(x, top, w, this.MAXD*S);
+    this.layers.forEach((L,i) => {
+      const y=top+L.top*S, h=L.thick*S; if (y>top+this.MAXD*S+2) return;
+      const comp = 1 - L.thick/L.t0;             // 0 fresh … 0.66 ice
+      c.fillStyle = i%2 ? '#F4F9FC' : '#E3EEF6'; c.fillRect(x, y, w, h);
+      c.fillStyle = 'rgba(15,34,56,.06)'; c.fillRect(x, y, w, 1.2);
+      const mid = L.top + L.thick/2, iced = mid >= this.CLOSE;
+      for (const p of L.pockets){
+        const px = x + p.u*w, py = y + p.v*h;
+        const base = Math.min(h*.34, 14)*p.s;
+        const r = Math.max(1.6, base*(1-comp*1.15));
+        c.beginPath();
+        if (comp < .3){ c.ellipse(px, py, r*1.7, r*.9, p.r, 0, 6.29); } else { c.arc(px, py, r, 0, 6.29); }
+        c.fillStyle = L.tracer ? (iced? '#F2B441' : 'rgba(242,180,65,.85)') : (iced? '#3FA9F0' : 'rgba(63,169,240,.55)');
+        c.fill();
+        if (iced){ c.lineWidth=1.2; c.strokeStyle = L.tracer? '#B27A12' : '#1E7FC2'; c.stroke(); }
+      }
+    });
+    c.restore();
+    // column outline
+    c.strokeStyle='#B9D2E2'; c.lineWidth=2; c.strokeRect(x, top, w, this.MAXD*S);
+    // surface line + label
+    c.fillStyle='#2B6C9B'; c.font='700 13px "JetBrains Mono", monospace'; c.textAlign='center'; c.fillText('SURFACE', x+w/2, top-8);
+    // depth scale
+    c.textAlign='right'; c.font='500 13px "JetBrains Mono", monospace'; c.fillStyle='#6A88A2';
+    for (let d=0; d<=this.MAXD; d+=25){ const yy=top+d*S; c.fillRect(x-12, yy-1, 8, 2); c.fillText(d+' m', x-18, yy+4); }
+    // zones
+    c.textAlign='left'; c.font='700 14px "JetBrains Mono", monospace';
+    const zx = x+w+16;
+    const zone=(d0,d1,label,col)=>{ c.fillStyle=col; c.fillRect(zx, top+d0*S, 4, (d1-d0)*S-2); c.fillStyle='#3B556E'; c.fillText(label, zx+12, top+((d0+d1)/2)*S+5); };
+    zone(0,20,'fluffy snow','#CBDDEA'); zone(20,95,'firn: squeezed snow','#5E9BC4'); zone(95,this.MAXD,'ice: sealed bubbles','#123F63');
+    // close-off line
+    c.setLineDash([7,6]); c.strokeStyle='#EE5A2A'; c.lineWidth=2; c.beginPath(); c.moveTo(x-6, top+this.CLOSE*S); c.lineTo(x+w+6, top+this.CLOSE*S); c.stroke(); c.setLineDash([]);
+    c.fillStyle='#EE5A2A'; c.font='700 13px "JetBrains Mono", monospace'; c.textAlign='left'; c.fillText('95 m · bubbles seal here', zx+12, top+this.CLOSE*S-8);
+    // tracer flag
+    const tr=this.layers.find(l=>l.tracer);
+    if (tr && tr.top < this.MAXD){ const ty = top + (tr.top+tr.thick/2)*S; c.fillStyle='#F2B441'; c.beginPath(); c.moveTo(x-30, ty); c.lineTo(x-14, ty-7); c.lineTo(x-14, ty+7); c.closePath(); c.fill(); c.font='700 12px "JetBrains Mono", monospace'; c.textAlign='right'; c.fillStyle='#B27A12'; c.fillText('our air', x-34, ty+4); }
+    // falling flakes
+    c.fillStyle='#fff';
+    for (const f of this.flakes){ c.globalAlpha=Math.max(0,f.life); c.beginPath(); c.arc(f.x, Math.min(f.y, top-2), f.r, 0, 6.29); c.fill(); }
+    c.globalAlpha=1;
+    // legend
+    c.font='500 13px "JetBrains Mono", monospace'; c.textAlign='left'; c.fillStyle='#6A88A2';
+    c.fillText('white = snow & ice   blue = air   gold = our air', x, H-8);
+  },
+  frame(t){
+    if (!this.running) return;
+    const dt=Math.min(.05,(t-this.last)/1000||.016); this.last=t;
+    this.update(dt); this.draw();
+    requestAnimationFrame(t=>this.frame(t));
+  },
+  start(){ this.resize(); if (this.running) return; this.running=true; this.last=performance.now(); requestAnimationFrame(t=>this.frame(t)); },
+  stop(){ this.running=false; },
+  toggleAuto(){ this.auto=!this.auto; this.autoT=.6; $('#snAuto').classList.toggle('on', this.auto); $('#snAuto').textContent = this.auto? 'Stop snowing' : 'Keep snowing'; }
+};
+$('#snAdd').onclick = () => { ensureAudio(); Snow.add(); };
+$('#snAuto').onclick = () => { ensureAudio(); Snow.toggleAuto(); };
+$('#snReset').onclick = () => Snow.reset();
+window.addEventListener('resize', () => Snow.resize());
+hooks[2] = { enter(){ Snow.start(); }, leave(){ Snow.stop(); if (Snow.auto) Snow.toggleAuto(); } };
+Snow.reset();
+
+/* ===================== SCENE 3 : LAB ===================== */
+const SAMPLES = [
+ {age:'1,000 years ago', ppm:280, note:'Before factories and cars. The air our great-great-great-grandparents breathed.'},
+ {age:'20,000 years ago', ppm:185, note:'Deep in the Ice Age. Less CO₂, and a much colder Earth.'},
+ {age:'130,000 years ago', ppm:285, note:'A warm time. More CO₂, and hippos in London.'},
+];
+$('#samples').innerHTML = SAMPLES.map((s,i)=>`
+ <div class="sample" data-i="${i}">
+  <div class="age">${s.age}</div>
+  <div class="icewrap"><svg viewBox="0 0 200 220" aria-hidden="true">
+    <defs><linearGradient id="gIce${i}" x1="0" x2="1"><stop offset="0" stop-color="#C9DDEA"/><stop offset=".45" stop-color="#F4F9FC"/><stop offset="1" stop-color="#A6CBE0"/></linearGradient></defs>
+    <rect x="55" y="20" width="90" height="180" rx="22" fill="url(#gIce${i})" stroke="#A6CBE0" stroke-width="2"/>
+    <g fill="#3FA9F0" opacity=".7"><circle cx="80" cy="60" r="4"/><circle cx="112" cy="90" r="3"/><circle cx="90" cy="130" r="5"/><circle cx="120" cy="160" r="3.5"/><circle cx="72" cy="175" r="2.5"/><circle cx="118" cy="45" r="2.5"/></g>
+    <g class="crack" stroke="#0F2238" stroke-width="2" fill="none" stroke-linecap="round"><path d="M70 40 l20 30 -12 26 22 34 -10 40"/><path d="M130 30 l-14 42 18 30 -22 44"/><path d="M60 120 l30 8 26 -12"/></g>
+    <g fill="#3FA9F0"><circle class="bub" cx="80" cy="60" r="6"/><circle class="bub" cx="112" cy="90" r="5"/><circle class="bub" cx="90" cy="130" r="7"/><circle class="bub" cx="120" cy="160" r="5"/><circle class="bub" cx="72" cy="175" r="4"/><circle class="bub" cx="118" cy="45" r="4"/></g>
+  </svg></div>
+  <button class="btn primary">Crush it!</button>
+  <div class="reading"><span class="num">&nbsp;</span></div>
+  <div class="note">${s.note}</div>
+ </div>`).join('');
+$$('.sample').forEach(card => {
+  card.querySelector('.btn').onclick = () => {
+    ensureAudio(); sfx('pop'); card.classList.add('crushed');
+    const s = SAMPLES[+card.dataset.i], num = card.querySelector('.num'), t0=performance.now();
+    const step = now => { const p=Math.min(1,(now-t0)/1400); num.innerHTML = Math.round(s.ppm*ease(p)) + ' <small>PPM CO₂</small>'; if (p<1) requestAnimationFrame(step); else card.classList.add('done'); };
+    requestAnimationFrame(step);
+  };
+});
+
+/* ===================== SCENE 4 : CHART ===================== */
+// [thousand years ago, CO2 ppm, Antarctic temperature vs today °C] — simplified from the Vostok core (Petit et al., 1999)
+const D = [[418,260,-1.5],[414,275,.5],[410,280,1],[405,265,-1],[400,240,-3],[395,215,-5.5],[385,200,-7.5],[375,195,-8],[365,195,-8],[355,205,-6.5],[345,220,-5],[338,245,-2.5],[333,275,1],[328,298,3],[324,285,1.5],[318,245,-2],[310,225,-4.5],[300,215,-5.5],[290,220,-5],[280,210,-6],[270,195,-7.5],[265,195,-8],[258,200,-7],[250,240,-2.5],[244,275,1],[240,285,2.5],[236,260,-1],[230,235,-3],[225,235,-4],[220,240,-3],[210,230,-4.5],[200,225,-5],[190,215,-5.5],[180,210,-6.5],[170,200,-7],[160,195,-7.5],[155,195,-8],[148,190,-8.5],[142,195,-8],[138,215,-5],[134,260,-1],[130,287,3],[125,285,2],[120,275,.5],[115,265,-1.5],[110,240,-3.5],[105,235,-3.5],[100,225,-4],[95,225,-4.5],[90,230,-4],[85,235,-3],[80,225,-4],[75,220,-5.5],[70,225,-5],[65,205,-6.5],[60,195,-7],[55,195,-6.5],[50,200,-5.5],[45,200,-6.5],[40,205,-6.5],[35,205,-6],[30,200,-7],[25,190,-7.5],[21,185,-8.5],[18,190,-8],[15,220,-5],[12,245,-2],[10,262,-.5],[5,265,-.5],[0,280,0]];
+const TODAY_PPM = 428;
+const CH = { W:1000, H:590, L:96, R:88, cTop:46, cBot:296, tTop:362, tBot:516 };
+const cx = age => CH.L + (1-age/420)*(CH.W-CH.L-CH.R);
+const cy = ppm => CH.cBot - (ppm-150)/(450-150)*(CH.cBot-CH.cTop);
+const ty = dt => CH.tBot - (dt+10)/15*(CH.tBot-CH.tTop);
+const chart = $('#chart');
+let co2Path, tempPath, chartDrawn=false, tempShown=false, todayShown=false, drawAnim=null;
+function buildChart(){
+  const s=[];
+  s.push(`<defs><linearGradient id="gToday" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#2B6C9B"/><stop offset="1" stop-color="#EE5A2A"/></linearGradient></defs>`);
+  // band = the ice's whole range
+  s.push(`<rect x="${CH.L}" y="${cy(300)}" width="${CH.W-CH.L-CH.R}" height="${cy(180)-cy(300)}" fill="#C7E6FA" opacity=".45"/>`);
+  s.push(`<text class="lbl" x="${CH.L+10}" y="${cy(180)+17}" style="fill:#2B6C9B">the ice's whole range: 180 to 300 ppm</text>`);
+  // grids + y labels
+  for (let p=150;p<=450;p+=50){ s.push(`<line x1="${CH.L}" x2="${CH.W-CH.R}" y1="${cy(p)}" y2="${cy(p)}" stroke="#B9D2E2" stroke-width="1" ${p%100? 'stroke-dasharray="2 5"':''}/>`); s.push(`<text x="${CH.L-10}" y="${cy(p)+5}" text-anchor="end">${p}${p===450?' ppm':''}</text>`); }
+  for (const d of [-8,-4,0,4]){ s.push(`<line x1="${CH.L}" x2="${CH.W-CH.R}" y1="${ty(d)}" y2="${ty(d)}" stroke="#B9D2E2" stroke-width="1" ${d? 'stroke-dasharray="2 5"':''}/>`); s.push(`<text x="${CH.L-10}" y="${ty(d)+5}" text-anchor="end">${d>0?'+':''}${d} °C</text>`); }
+  // x labels
+  for (const a of [400,300,200,100]){ s.push(`<line x1="${cx(a)}" x2="${cx(a)}" y1="${CH.cBot}" y2="${CH.cBot+8}" stroke="#B9D2E2" stroke-width="2"/><text x="${a===400? cx(a)-16 : cx(a)}" y="${CH.cBot+26}" text-anchor="${a===400?'start':'middle'}">${a},000${a===400?' years ago':''}</text>`); }
+  s.push(`<text x="${cx(0)}" y="${CH.cBot+26}" text-anchor="middle" font-weight="700" style="fill:#0F2238">Today</text>`);
+  s.push(`<text class="lbl" x="${CH.L}" y="${CH.cTop-16}" font-weight="700">CO₂ in the bubbles</text>`);
+  s.push(`<g id="tempG" opacity="0"><text class="lbl" transform="translate(20,${(CH.tTop+CH.tBot)/2}) rotate(-90)" text-anchor="middle" font-weight="700">Temperature vs today</text></g>`);
+  // paths
+  const dCo2 = D.map((r,i)=>`${i?'L':'M'}${cx(r[0]).toFixed(1)} ${cy(r[1]).toFixed(1)}`).join(' ');
+  const dT = D.map((r,i)=>`${i?'L':'M'}${cx(r[0]).toFixed(1)} ${ty(r[2]).toFixed(1)}`).join(' ');
+  s.push(`<path id="tempPath" d="${dT}" fill="none" stroke="#F59E3A" stroke-width="3" stroke-linejoin="round" stroke-linecap="round" opacity="0"/>`);
+  s.push(`<path id="co2Path" d="${dCo2}" fill="none" stroke="#2B6C9B" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round"/>`);
+  s.push(`<circle id="chDot" r="7" fill="#2B6C9B" stroke="#fff" stroke-width="3" opacity="0"/>`);
+  // markers (warm / ice age), shown with temperature
+  s.push(`<g id="markers" opacity="0"></g>`);
+  // today spike
+  const x0=cx(0);
+  s.push(`<g id="todayG" opacity="0"><line id="todayLine" x1="${x0}" y1="${cy(280)}" x2="${x0}" y2="${cy(TODAY_PPM)}" stroke="url(#gToday)" stroke-width="6" stroke-linecap="round"/>
+    <circle id="todayDot" cx="${x0}" cy="${cy(TODAY_PPM)}" r="9" fill="#EE5A2A" stroke="#fff" stroke-width="3"/>
+    <circle id="todayPulse" cx="${x0}" cy="${cy(TODAY_PPM)}" r="9" fill="none" stroke="#EE5A2A" stroke-width="3"/>
+    <text class="big" x="${x0-36}" y="${cy(TODAY_PPM)+12}" text-anchor="end">${TODAY_PPM} ppm</text>
+    <text class="lbl" x="${x0-36}" y="${cy(TODAY_PPM)+34}" text-anchor="end" style="fill:#EE5A2A">today · August 2026</text></g>`);
+  // crosshair
+  s.push(`<g id="xhair" opacity="0"><line id="xhLine" y1="${CH.cTop}" y2="${CH.tBot}" stroke="#0F2238" stroke-width="1.5" stroke-dasharray="4 4"/><circle id="xhC" r="6" fill="#2B6C9B" stroke="#fff" stroke-width="2"/><circle id="xhT" r="6" fill="#F59E3A" stroke="#fff" stroke-width="2" opacity="0"/></g>`);
+  s.push(`<rect id="chHit" x="${CH.L}" y="${CH.cTop}" width="${CH.W-CH.L-CH.R}" height="${CH.tBot-CH.cTop}" fill="transparent"/>`);
+  chart.innerHTML = s.join('');
+  co2Path=$('#co2Path'); tempPath=$('#tempPath');
+  const len=co2Path.getTotalLength(); co2Path.style.strokeDasharray=len; co2Path.style.strokeDashoffset=len;
+  const lt=tempPath.getTotalLength(); tempPath.style.strokeDasharray=lt; tempPath.style.strokeDashoffset=lt;
+  // markers
+  const warm=[410,328,240,130,0], cold=[375,265,148,21];
+  let m='';
+  for (const a of warm){ const r=D.find(r=>r[0]===a); const x=cx(a), y=ty(r[2])-20; m+=`<g transform="translate(${x},${y})"><circle r="8" fill="#F59E3A"/>${[0,45,90,135,180,225,270,315].map(d=>`<line x1="0" y1="-11" x2="0" y2="-15" stroke="#F59E3A" stroke-width="2.5" stroke-linecap="round" transform="rotate(${d})"/>`).join('')}<text class="warmL" y="-20" text-anchor="middle">${a===0?'warm (now)':'warm'}</text></g>`; }
+  for (const a of cold){ const r=D.find(r=>r[0]===a); const x=cx(a), y=ty(r[2])+20; m+=`<g transform="translate(${x},${y})">${[0,60,120].map(d=>`<line x1="0" y1="-9" x2="0" y2="9" stroke="#2B6C9B" stroke-width="2.5" stroke-linecap="round" transform="rotate(${d})"/>`).join('')}<text class="coldL" y="26" text-anchor="middle">ice age</text></g>`; }
+  $('#markers').innerHTML = m;
+}
+function drawCO2(){
+  cancelAnimationFrame(drawAnim);
+  const len=co2Path.getTotalLength(), dot=$('#chDot'), t0=performance.now(), dur = reduceMotion? 0 : 7000;
+  dot.setAttribute('opacity',1);
+  const step = now => {
+    const p = dur? Math.min(1,(now-t0)/dur) : 1;
+    co2Path.style.strokeDashoffset = len*(1-p);
+    const pt = co2Path.getPointAtLength(len*p); dot.setAttribute('cx',pt.x); dot.setAttribute('cy',pt.y);
+    const age = 420*(1-(pt.x-CH.L)/(CH.W-CH.L-CH.R)), ppm = 150+(CH.cBot-pt.y)/(CH.cBot-CH.cTop)*300;
+    $('#chLiveAge').textContent = age<1? 'Today' : fmt(age*1000); $('#chLivePpm').textContent = Math.round(ppm);
+    if (p<1) drawAnim=requestAnimationFrame(step); else { chartDrawn=true; setTimeout(()=>dot.setAttribute('opacity',0), 1500); }
+  };
+  step(t0);
+}
+function showTemp(){
+  if (tempShown) return; tempShown=true; ensureAudio();
+  $('#tempG').setAttribute('opacity',1); tempPath.setAttribute('opacity',1);
+  const lt=tempPath.getTotalLength(), t0=performance.now(), dur=reduceMotion?0:4000;
+  const step = now => { const p=dur?Math.min(1,(now-t0)/dur):1; tempPath.style.strokeDashoffset=lt*(1-p); if (p<1) requestAnimationFrame(step); else { $('#markers').setAttribute('opacity',1); } };
+  step(t0);
+  $('#xhT').setAttribute('opacity',1);
+  $('#chNote').innerHTML = 'Look! When CO₂ goes <b>up</b>, the temperature goes <b>up</b>. When CO₂ falls, an ice age. They move together, every single time.';
+  $('#chTemp').disabled=true;
+}
+function showToday(){
+  if (todayShown) return; todayShown=true; ensureAudio(); sfx('rise');
+  const g=$('#todayG'), line=$('#todayLine'), dot=$('#todayDot'), pulse=$('#todayPulse');
+  g.setAttribute('opacity',1);
+  const y0=cy(280), y1=cy(TODAY_PPM), t0=performance.now(), dur=reduceMotion?0:1400;
+  const step = now => { const p=dur?Math.min(1,(now-t0)/dur):1, y=lerp(y0,y1,ease(p)); line.setAttribute('y2',y); dot.setAttribute('cy',y); pulse.setAttribute('cy',y); if (p<1) requestAnimationFrame(step); else pulseLoop(); };
+  const pulseLoop = () => { if (reduceMotion) return; const t=performance.now()/1000; const r=9+((t%1.4)/1.4)*26; pulse.setAttribute('r',r); pulse.setAttribute('opacity',1-(t%1.4)/1.4); if (cur===4) requestAnimationFrame(pulseLoop); };
+  step(t0);
+  $('#chNote').innerHTML = `In 420,000 years the ice never saw more than 300. Today the air is <b>${TODAY_PPM} ppm</b>, and it rises about 2 more every year.`;
+  $('#chToday').disabled=true;
+}
+function chartHover(ev){
+  const rect = chart.getBoundingClientRect();
+  const sc = Math.min(rect.width/CH.W, rect.height/CH.H), ox = (rect.width-CH.W*sc)/2, oy = (rect.height-CH.H*sc)/2;
+  const sx = (ev.clientX-rect.left-ox)/sc;
+  if (sx<CH.L||sx>CH.W-CH.R){ hideHover(); return; }
+  const age = 420*(1-(sx-CH.L)/(CH.W-CH.L-CH.R));
+  let best=D[0]; for (const r of D) if (Math.abs(r[0]-age)<Math.abs(best[0]-age)) best=r;
+  const x=cx(best[0]);
+  $('#xhair').setAttribute('opacity',1); $('#xhLine').setAttribute('x1',x); $('#xhLine').setAttribute('x2',x);
+  $('#xhC').setAttribute('cx',x); $('#xhC').setAttribute('cy',cy(best[1]));
+  $('#xhT').setAttribute('cx',x); $('#xhT').setAttribute('cy',ty(best[2]));
+  const tag = best[1]>=255? ['warm','warm time'] : best[1]<=205? ['cold','ice age'] : ['mid','in between'];
+  const tip=$('#chTip'); tip.hidden=false;
+  tip.innerHTML = `${best[0]===0?'Today (before factories)':fmt(best[0]*1000)+' years ago'}<b>${best[1]} ppm</b>${tempShown? `${best[2]>0?'+':''}${best[2]} °C vs today<br>`:''}<span class="tag ${tag[0]}">${tag[1]}</span>`;
+  const prect = chart.parentElement.getBoundingClientRect();
+  const px = rect.left + ox + x*sc - prect.left;
+  const py = rect.top + oy + cy(best[1])*sc - prect.top;
+  tip.style.left=px+'px'; tip.style.top=(py-10)+'px';
+}
+function hideHover(){ $('#xhair').setAttribute('opacity',0); $('#chTip').hidden=true; }
+buildChart();
+chart.addEventListener('pointermove', chartHover); chart.addEventListener('pointerleave', hideHover);
+$('#chDraw').onclick = () => { ensureAudio(); drawCO2(); };
+$('#chTemp').onclick = showTemp;
+$('#chToday').onclick = showToday;
+hooks[4] = { enter(){ if (!chartDrawn) setTimeout(drawCO2, 500); } };
+
+/* ===================== SCENE 5 : WORLDS ===================== */
+const wdSlider=$('#wdSlider');
+const TREES = Array.from({length:14}, (_,i)=>({x:60+i*84+(i%3)*18, y:[452,446,470,438,462,448,455,432,458,442,450,436,452,447][i], h:26+(i%4)*8}));
+$('#wdTrees').innerHTML = TREES.map(t=>`<g class="tree" opacity="0" transform="translate(${t.x},${t.y})"><rect x="-3" y="0" width="6" height="12" fill="#5A4636"/><polygon points="-${t.h*.55},0 ${t.h*.55},0 0,-${t.h}" fill="#2F7A46"/><polygon points="-${t.h*.42},-${t.h*.4} ${t.h*.42},-${t.h*.4} 0,-${t.h*1.25}" fill="#3C9A57"/></g>`).join('');
+const hex2 = h => [parseInt(h.slice(1,3),16),parseInt(h.slice(3,5),16),parseInt(h.slice(5,7),16)];
+const mix = (a,b,t) => { const A=hex2(a),B=hex2(b); return `rgb(${A.map((v,i)=>Math.round(lerp(v,B[i],t))).join(',')})`; };
+function piece(ppm, pts){ for (let i=1;i<pts.length;i++){ if (ppm<=pts[i][0]) return lerp(pts[i-1][1],pts[i][1],(ppm-pts[i-1][0])/(pts[i][0]-pts[i-1][0])); } return pts[pts.length-1][1]; }
+function updateWorld(){
+  const ppm = +wdSlider.value, beyond = ppm>300;
+  const k = clamp((ppm-180)/120, 0, 1);            // 0 ice age … 1 at 300
+  const temp = piece(ppm, [[180,-6],[230,-4],[280,0],[300,2]]);
+  const sea  = piece(ppm, [[180,-120],[230,-60],[280,0],[300,7]]);
+  $('#wdPpm').textContent = ppm;
+  $('#wdPpm').classList.toggle('hot', beyond);
+  $('#wdTemp').textContent = beyond? '?' : (temp>0?'+':'')+temp.toFixed(temp%1?1:0)+' °C';
+  $('#wdSea').textContent = beyond? '?' : (sea>0?'+':'')+Math.round(sea)+' m';
+  $('#wdTemp').classList.toggle('hot', beyond); $('#wdSea').classList.toggle('hot', beyond);
+  $('#wdSub').innerHTML = beyond? 'already +1.3 °C · sea rising about 4 mm every year' : '&nbsp;';
+  // scene
+  $('#wdSky').setAttribute('fill', beyond? mix('#BFD6EA','#F3C9A6', clamp((ppm-300)/130,0,1)) : mix('#9DB9D3','#BFD6EA', k));
+  $('#wdSun').setAttribute('opacity', .5+k*.5);
+  $('#wdLand').setAttribute('fill', mix('#B9B3A2','#5B9E4E', k));
+  $('#iceClipRect').setAttribute('height', beyond? 235-clamp((ppm-300)/130,0,1)*40 : lerp(470,235,k));
+  const n = Math.round(k*TREES.length);
+  $$('#wdTrees .tree').forEach((t,i)=>t.setAttribute('opacity', i<n? 1:0));
+  const seaY = beyond? 425 : lerp(560,425,k);
+  $('#wdSea').setAttribute('y', seaY); $('#wdSea').setAttribute('height', 640-seaY);
+  $('#wdBridge').setAttribute('opacity', ppm<215? 1:0);
+  $('#wdMammoth').setAttribute('opacity', ppm<235? 1:0);
+  $('#wdHippo').setAttribute('opacity', ppm>262 && !beyond? 1:0);
+  $('#wdQ').setAttribute('opacity', beyond? 1:0);
+  $('#wdThermQ').setAttribute('opacity', beyond? 1:0);
+  const mercTop = beyond? 100 : lerp(470,100,(temp+6)/9);
+  $('#wdMerc').setAttribute('y', mercTop); $('#wdMerc').setAttribute('height', 470-mercTop);
+  $('#wdMerc').setAttribute('fill', beyond? '#EE5A2A' : mix('#5E9BC4','#EE5A2A',(temp+6)/9));
+  // words
+  let title, text;
+  if (ppm<=215){ title='Ice age'; text='Ice 3 km thick covers Canada and northern Europe. The sea is so low that India and Sri Lanka are joined by dry land. Mammoths roam the cold grass.'; }
+  else if (ppm<=255){ title='Warming up'; text='The ice is melting back. The seas are rising. Forests creep back north. The mammoths are running out of cold places.'; }
+  else if (ppm<=300){ title='Warm time'; text='Ice only on the mountains and at the poles. The sea a few metres higher than today. Hippos wallow in the river at London.'; }
+  else { title='Beyond the ice\'s memory'; text=`In 420,000 years the ice never saw CO₂ above 300. We are at ${ppm} ppm, and adding about 2 more every year. What happens next is the story your generation will write.`; }
+  $('#wdTitle').textContent=title; $('#wdText').textContent=text;
+}
+wdSlider.addEventListener('input', updateWorld); updateWorld();
+
+/* ===================== SCENE 6 : WHY DID IT GET SO HIGH ===================== */
+const HS_CO2=[[1750,277],[1775,279],[1800,283],[1825,284],[1850,285],[1875,289],[1900,296],[1910,299],[1920,303],[1930,307],[1940,310],[1950,311],[1960,317],[1970,326],[1980,339],[1990,354],[2000,369],[2010,390],[2020,412],[2026,428]];
+const HS_POP=[[1750,.8],[1800,1],[1850,1.26],[1900,1.65],[1950,2.5],[1970,3.7],[1990,5.3],[2000,6.1],[2010,6.9],[2020,7.8],[2026,8.2]];
+const HS_EM=[[1750,.01],[1800,.03],[1850,.2],[1900,2],[1950,6],[1970,15],[1990,22.5],[2000,25],[2010,33],[2020,35],[2026,38]];
+const HS_STOPS=[
+ {y:1750, chip:'1750', title:'Before the machines', text:'Most people are farmers. Horses, wind, water and muscles do all the work. Wood fires for cooking. About 800 million people on Earth.'},
+ {y:1776, chip:'Steam', title:'The steam engine', text:'James Watt\'s engine burns coal to boil water, and the steam pushes pistons. One machine does the work of 100 horses. That coal is squashed forest from 300 million years ago: ancient sunshine, dug up and burned.'},
+ {y:1825, chip:'Trains', title:'The first railway', text:'A steam train carries passengers from Stockton to Darlington in England. In 1853 India\'s first train puffs from Bombay to Thane. Coal smoke everywhere.'},
+ {y:1882, chip:'Electric light', title:'Electric light', text:'Edison opens the first coal power station in New York. Wires carry light into homes and streets. The power station burns coal day and night.'},
+ {y:1908, chip:'Cars', title:'Cars for everyone', text:'Henry Ford\'s factory turns out a cheap car every few minutes. Petrol comes from oil, which is also ancient sunshine: tiny sea creatures buried for 100 million years.'},
+ {y:1950, chip:'Speed-up', title:'The great speed-up', text:'2.5 billion people. Aeroplanes, plastics, concrete cities, fridges, tractors. Everything gets faster. Look what the line does.'},
+ {y:1958, chip:'Counting', title:'Someone starts counting', text:'Charles Keeling begins measuring CO₂ on a volcano in Hawaii: 315 ppm. He measures every single day. The line has climbed every year since.'},
+ {y:1990, chip:'Plugged in', title:'The whole world plugs in', text:'5.3 billion people. Factories in China and India grow fast. Nearly everyone wants a light, a fan, a scooter, a fridge. Most of the electricity still comes from coal.'},
+ {y:2015, chip:'Promise', title:'The world promises to act', text:'In Paris, nearly every country promises to cut CO₂. Solar panels and wind turbines get cheaper every year. India builds some of the biggest solar parks on Earth.'},
+ {y:2026, chip:'Today', title:'Today', text:'8.2 billion people. Every year we burn about 8 billion tonnes of coal and 5 billion tonnes of oil, and send 40 billion tonnes of CO₂ into the air. About half of it stays there.'},
+];
+const hsSlider=$('#hsSlider'), hs=$('#hs');
+const gx = y => 90 + (y-1750)/(2030-1750)*1060;
+const gy = p => 380 - (p-270)/(440-270)*330;
+function interp(tbl, x){ if (x<=tbl[0][0]) return tbl[0][1]; for (let i=1;i<tbl.length;i++){ if (x<=tbl[i][0]) return lerp(tbl[i-1][1],tbl[i][1],(x-tbl[i-1][0])/(tbl[i][0]-tbl[i-1][0])); } return tbl[tbl.length-1][1]; }
+function buildHS(){
+  const s=[];
+  s.push(`<defs><clipPath id="hsClip"><rect id="hsClipRect" x="0" y="0" width="0" height="420"/></clipPath>
+    <linearGradient id="hsSky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8FB9E0"/><stop offset="1" stop-color="#E3EEF6"/></linearGradient></defs>`);
+  for (const p of [280,320,360,400,440]) s.push(`<line x1="90" x2="1150" y1="${gy(p)}" y2="${gy(p)}" stroke="#B9D2E2" ${p===280?'':'stroke-dasharray="2 5"'}/><text x="78" y="${gy(p)+5}" text-anchor="end">${p}${p===440?' ppm':''}</text>`);
+  for (const y of [1750,1800,1850,1900,1950,2000]) s.push(`<line x1="${gx(y)}" x2="${gx(y)}" y1="380" y2="388" stroke="#B9D2E2" stroke-width="2"/><text x="${gx(y)}" y="408" text-anchor="middle">${y}</text>`);
+  s.push(`<text x="90" y="34" font-weight="700" style="fill:#3B556E">CO₂ in the air</text>`);
+  const d = HS_CO2.map((r,i)=>`${i?'L':'M'}${gx(r[0]).toFixed(1)} ${gy(r[1]).toFixed(1)}`).join(' ');
+  s.push(`<path d="${d}" fill="none" stroke="#C9DDEA" stroke-width="4" stroke-linejoin="round" stroke-dasharray="6 6"/>`);
+  s.push(`<path d="${d}" fill="none" stroke="#2B6C9B" stroke-width="4.5" stroke-linejoin="round" clip-path="url(#hsClip)"/>`);
+  s.push(`<line id="hsVLine" x1="90" x2="90" y1="50" y2="640" stroke="#EE5A2A" stroke-dasharray="4 5" stroke-width="1.5" opacity=".7"/>`);
+  s.push(`<circle id="hsDot" r="9" fill="#EE5A2A" stroke="#fff" stroke-width="3"/>`);
+  s.push(`<text id="hsLbl" class="big" x="0" y="0">277 ppm</text>`);
+  // ---- skyline ----
+  const era = (from, inner) => `<g class="era" data-from="${from}" opacity="${from<=1750?1:0}">${inner}</g>`;
+  const smoke = (x,y,r=8) => [0,1,2].map(i=>`<circle class="smoke" cx="${x}" cy="${y}" r="${r}" fill="#9AA0A8" style="animation-delay:${(i*1.07).toFixed(2)}s"/>`).join('');
+  const car = (x,c) => `<g transform="translate(${x},0)"><rect x="0" y="662" width="42" height="16" rx="5" fill="${c}"/><rect x="8" y="653" width="24" height="11" rx="3" fill="${c}"/><circle cx="9" cy="679" r="5" fill="#1D2438"/><circle cx="33" cy="679" r="5" fill="#1D2438"/></g>`;
+  const tower = (x,y,w,h) => { let t=`<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="#4B5563"/>`; for (let yy=y+10; yy<y+h-8; yy+=16) for (let xx=x+6; xx<x+w-6; xx+=12) t+=`<rect x="${xx}" y="${yy}" width="5" height="7" fill="#FFD27A" opacity=".8"/>`; return t; };
+  s.push(`<rect x="0" y="420" width="1200" height="220" fill="url(#hsSky)"/>`);
+  s.push(`<circle cx="1100" cy="470" r="28" fill="#FFD79A"/>`);
+  s.push(`<path d="M0 640 Q150 590 300 620 T600 615 T900 625 T1200 610 V640 Z" fill="#A9C7A0"/>`);
+  s.push(`<rect id="hsHaze" x="0" y="420" width="1200" height="220" fill="#8A8F98" opacity="0"/>`);
+  s.push(`<rect x="0" y="640" width="1200" height="80" fill="#7FA86B"/>`);
+  s.push(era(1750, `<polygon points="128,640 152,640 146,566 134,566" fill="#8B6B4A"/><g transform="translate(140,562)"><g class="blades"><rect x="-3" y="-46" width="6" height="92" fill="#5A4636"/><rect x="-46" y="-3" width="92" height="6" fill="#5A4636"/></g></g>
+    <rect x="190" y="600" width="64" height="40" fill="#D9C7A3"/><polygon points="184,600 222,572 260,600" fill="#8B5E3C"/>
+    <g stroke="#6E9A5A" stroke-width="3"><line x1="40" y1="652" x2="170" y2="652"/><line x1="40" y1="662" x2="170" y2="662"/><line x1="40" y1="672" x2="170" y2="672"/></g>`));
+  s.push(era(1776, `<rect x="300" y="586" width="80" height="54" fill="#6B6F7A"/><polygon points="300,586 320,570 340,586 360,570 380,586" fill="#545862"/><rect x="358" y="538" width="12" height="50" fill="#4A4E58"/>${smoke(364,534)}`));
+  s.push(era(1825, `<line x1="380" y1="641" x2="640" y2="641" stroke="#4A4E58" stroke-width="3"/><rect x="430" y="606" width="96" height="30" rx="4" fill="#3B4668"/><rect x="430" y="590" width="26" height="18" fill="#3B4668"/><rect x="504" y="590" width="10" height="16" fill="#2C3552"/><circle cx="446" cy="640" r="6" fill="#1D2438"/><circle cx="472" cy="640" r="6" fill="#1D2438"/><circle cx="510" cy="640" r="6" fill="#1D2438"/>${smoke(509,586,6)}`));
+  s.push(era(1882, `<rect x="640" y="574" width="100" height="66" fill="#565B66"/><rect x="654" y="498" width="16" height="78" fill="#3D414A"/><rect x="700" y="510" width="16" height="66" fill="#3D414A"/>${smoke(662,494,10)}${smoke(708,506,9)}<rect x="200" y="612" width="10" height="10" fill="#FFD27A"/><rect x="234" y="612" width="10" height="10" fill="#FFD27A"/><rect x="312" y="600" width="8" height="10" fill="#FFD27A"/><rect x="336" y="600" width="8" height="10" fill="#FFD27A"/><line x1="600" y1="640" x2="600" y2="596" stroke="#3D414A" stroke-width="3"/><circle cx="600" cy="594" r="5" fill="#FFD27A"/>`));
+  s.push(era(1908, `<rect x="40" y="664" width="1120" height="22" fill="#5C6570"/><line x1="40" y1="675" x2="1160" y2="675" stroke="#E9EEF3" stroke-width="2" stroke-dasharray="14 12"/>${car(280,'#8E2F2F')}${car(350,'#2A55A8')}${car(420,'#1D2438')}`));
+  s.push(era(1930, tower(860,520,30,120)+tower(900,478,40,162)+tower(950,552,26,88)));
+  s.push(era(1950, `<g transform="translate(920,452)"><polygon points="0,0 70,0 90,8 70,16 0,16 -10,8" fill="#E4EBF2" stroke="#8FA3B5" stroke-width="2"/><polygon points="30,8 50,30 60,30 45,8" fill="#C9D5E0"/><polygon points="30,8 50,-14 60,-14 45,8" fill="#C9D5E0"/></g>${car(500,'#C77D2E')}${car(570,'#EAEAEA')}<rect x="770" y="592" width="60" height="48" fill="#6B6F7A"/><polygon points="770,592 785,578 800,592 815,578 830,592" fill="#545862"/><rect x="816" y="552" width="10" height="42" fill="#4A4E58"/>${smoke(821,548,7)}`));
+  s.push(era(1990, tower(990,500,30,140)+tower(1030,540,30,100)+`${car(640,'#2F7FB8')}${car(700,'#8E2F2F')}${car(760,'#1D2438')}<g transform="translate(1010,505) scale(.6)"><polygon points="0,0 70,0 90,8 70,16 0,16 -10,8" fill="#E4EBF2" stroke="#8FA3B5" stroke-width="2"/><polygon points="30,8 50,30 60,30 45,8" fill="#C9D5E0"/><polygon points="30,8 50,-14 60,-14 45,8" fill="#C9D5E0"/></g>`));
+  s.push(era(2015, `<rect x="1116" y="560" width="8" height="80" fill="#E9EEF3" stroke="#8FA3B5"/><g transform="translate(1120,560)"><g class="blades"><rect x="-2.5" y="-44" width="5" height="88" rx="2" fill="#E9EEF3" stroke="#8FA3B5"/><rect x="-2.5" y="-44" width="5" height="88" rx="2" fill="#E9EEF3" stroke="#8FA3B5" transform="rotate(60)"/><rect x="-2.5" y="-44" width="5" height="88" rx="2" fill="#E9EEF3" stroke="#8FA3B5" transform="rotate(120)"/></g></g><g transform="skewX(-20)"><rect x="1275" y="624" width="36" height="14" fill="#2B4C8C" stroke="#9CC7E0"/><rect x="1318" y="624" width="36" height="14" fill="#2B4C8C" stroke="#9CC7E0"/></g>`));
+  hs.innerHTML = s.join('');
+  $('#hsChips').innerHTML = HS_STOPS.map((e,i)=>`<button class="chip" data-i="${i}">${e.chip}</button>`).join('');
+  $$('#hsChips .chip').forEach(c => c.onclick = () => { ensureAudio(); sfx('blip'); animateSlider(hsSlider, HS_STOPS[+c.dataset.i].y, updateHS); });
+}
+function updateHSAudio(){
+  const y=+hsSlider.value, e=interp(HS_EM,y)/38;
+  Nature.set({ waves:.22, birds: y<1800? .8 : y<1900? .45 : y<1950? .2 : .06 });
+  Machines.set({ chuff: (y>=1776 && y<1960)? .5 : 0, rate: y<1825? 1.2 : y<1900? 2.2 : 3, drone: y>=1882? .05+.25*e : 0, traffic: y>=1908? .06+.3*e : 0 });
+}
+function updateHS(){
+  const y=Math.round(+hsSlider.value), ppm=interp(HS_CO2,y), pop=interp(HS_POP,y), em=interp(HS_EM,y);
+  $('#hsYear').textContent=y; $('#hsPpm').textContent=Math.round(ppm);
+  $('#hsPop').textContent = pop<1? Math.round(pop*10)*100+' million' : pop.toFixed(1)+' billion';
+  $('#hsEm').textContent = em<.05? 'almost none' : em<1? em.toFixed(1) : Math.round(em);
+  const x=gx(y), yy=gy(ppm);
+  $('#hsClipRect').setAttribute('width', x);
+  $('#hsVLine').setAttribute('x1',x); $('#hsVLine').setAttribute('x2',x);
+  $('#hsDot').setAttribute('cx',x); $('#hsDot').setAttribute('cy',yy);
+  const lbl=$('#hsLbl'); lbl.textContent=Math.round(ppm)+' ppm'; lbl.setAttribute('x', x<980? x+16 : x-16); lbl.setAttribute('text-anchor', x<980?'start':'end'); lbl.setAttribute('y', yy-14);
+  $$('#hs .era').forEach(g => g.setAttribute('opacity', y>=+g.dataset.from? 1:0));
+  $('#hsHaze').setAttribute('opacity', (em/38)*.5);
+  const stop = [...HS_STOPS].reverse().find(s=>y>=s.y);
+  $('#hsTitle').textContent=stop.title; $('#hsText').textContent=stop.text;
+  $$('#hsChips .chip').forEach(c=>c.classList.toggle('on', HS_STOPS[+c.dataset.i]===stop));
+  if (cur===6) updateHSAudio();
+}
+buildHS(); updateHS();
+hsSlider.addEventListener('input', () => { cancelAnimationFrame(sliderAnim); updateHS(); });
+hooks[6] = { enter(){ updateHS(); } };
+
+/* ===================== SCENE 7 : THE CARBON CYCLE ===================== */
+let ccHumans=false;
+function buildCycle(){
+  const s=[];
+  const mk = (id,col) => `<marker id="${id}" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="4" markerHeight="4" orient="auto"><path d="M0 0L10 5L0 10z" fill="${col}"/></marker>`;
+  s.push(`<defs>${mk('arrG','#2C9C68')}${mk('arrB','#2F7FB8')}${mk('arrK','#3B3F47')}</defs>`);
+  const paths = [
+    ['pAL','M430 215 C330 290 260 360 230 430','#2C9C68',14,'arrG',7,5],
+    ['pLA','M150 430 C190 330 300 250 400 195','#2C9C68',14,'arrG',7,5],
+    ['pAO','M570 215 C670 290 740 360 770 430','#2F7FB8',11,'arrB',6,5.5],
+    ['pOA','M850 430 C810 330 700 250 600 195','#2F7FB8',11,'arrB',6,5.5],
+  ];
+  for (const [id,d,col,w,m,n,dur] of paths){
+    s.push(`<path id="${id}" d="${d}" fill="none" stroke="${col}" stroke-width="${w}" stroke-linecap="round" opacity=".28" marker-end="url(#${m})"/>`);
+    for (let i=0;i<n;i++) s.push(`<circle r="6.5" fill="${col}"><animateMotion dur="${dur}s" repeatCount="indefinite" begin="${(-i*dur/n).toFixed(2)}s"><mpath xlink:href="#${id}" href="#${id}"/></animateMotion></circle>`);
+  }
+  s.push(`<text x="330" y="335" class="num" id="ccLandIn">breathe in 440</text><text x="20" y="300" class="num">breathe out 440</text>`);
+  s.push(`<text x="665" y="335" class="num" id="ccSeaIn" text-anchor="end">soaks up 330</text><text x="985" y="300" class="num" text-anchor="end">lets go 330</text>`);
+  // air cloud
+  s.push(`<g id="ccCloud" class="cloud" fill="#DCEAF3"><circle cx="440" cy="160" r="46"/><circle cx="485" cy="128" r="60"/><circle cx="545" cy="136" r="54"/><circle cx="585" cy="166" r="42"/><rect x="420" y="150" width="190" height="56" rx="28"/></g>`);
+  s.push(`<text x="500" y="150" class="node" text-anchor="middle">AIR</text><text id="ccAirLbl" x="500" y="182" class="num" text-anchor="middle">in balance</text>`);
+  // land
+  const tree = (x,y,h,c) => `<rect x="${x-4}" y="${y-8}" width="8" height="16" fill="#5A4636"/><polygon points="${x-h*.5},${y-6} ${x+h*.5},${y-6} ${x},${y-h}" fill="${c}"/><polygon points="${x-h*.38},${y-h*.45} ${x+h*.38},${y-h*.45} ${x},${y-h*1.25}" fill="${c}"/>`;
+  s.push(`<ellipse cx="200" cy="520" rx="130" ry="26" fill="#7FA86B"/>${tree(140,520,70,'#2F7A46')}${tree(200,522,90,'#3C9A57')}${tree(260,520,64,'#2F7A46')}<text x="72" y="512" style="font-size:34px">🐄</text><text x="300" y="518" style="font-size:30px">🍄</text>`);
+  s.push(`<text x="200" y="574" class="node" text-anchor="middle" style="font-size:26px">PLANTS, ANIMALS &amp; SOIL</text>`);
+  // ocean
+  s.push(`<rect x="690" y="452" width="220" height="86" rx="14" fill="#2F7FB8"/><path d="M700 470 q18 -10 36 0 t36 0 t36 0 t36 0 t36 0" fill="none" stroke="#9CC7E0" stroke-width="4" stroke-linecap="round"/><path d="M710 500 q18 -10 36 0 t36 0 t36 0 t36 0 t36 0" fill="none" stroke="#9CC7E0" stroke-width="4" stroke-linecap="round" opacity=".7"/><text x="760" y="530" style="font-size:28px">🐟</text>`);
+  s.push(`<text x="800" y="574" class="node" text-anchor="middle">THE SEA</text>`);
+  // humans
+  s.push(`<g id="ccHumanG" class="human" opacity="0"><path id="pHA" d="M500 560 L500 232" fill="none" stroke="#3B3F47" stroke-width="5" stroke-linecap="round" opacity=".5" marker-end="url(#arrK)"/>`);
+  for (let i=0;i<8;i++) s.push(`<circle r="6" fill="#3B3F47"><animateMotion dur="2.6s" repeatCount="indefinite" begin="${(-i*2.6/8).toFixed(2)}s"><mpath xlink:href="#pHA" href="#pHA"/></animateMotion></circle>`);
+  s.push(`<text x="518" y="400" class="num" style="fill:#EE5A2A">+40 extra</text>
+    <rect x="440" y="592" width="120" height="48" fill="#6B6F7A"/><polygon points="440,592 460,576 480,592 500,576 520,592 540,576 560,592" fill="#545862"/><rect x="530" y="548" width="14" height="46" fill="#4A4E58"/>
+    <text x="395" y="636" style="font-size:34px">🪓</text><text x="575" y="636" style="font-size:34px">⛽</text>
+    <text x="500" y="686" class="node" text-anchor="middle" style="font-size:24px">COAL, OIL, GAS &amp; CUT FORESTS</text></g>`);
+  $('#cycle').innerHTML = s.join('');
+}
+function setHumans(on){
+  ccHumans=on; ensureAudio();
+  $('#ccHumanG').setAttribute('opacity', on?1:0);
+  $('#ccCloud').setAttribute('fill', on?'#B9BEC8':'#DCEAF3');
+  $('#ccLandIn').textContent = on? 'breathe in 452' : 'breathe in 440';
+  $('#ccSeaIn').textContent = on? 'soaks up 340' : 'soaks up 330';
+  $('#ccAirLbl').textContent = on? '+18 every year' : 'in balance';
+  $('#ccIn').textContent = on? '810' : '770'; $('#ccOut').textContent = on? '792' : '770'; $('#ccNet').textContent = on? '+18' : '0';
+  $('#ccNet').classList.toggle('hot', on);
+  const st=$('#ccStatus'); st.className = 'status'+(on?' bad':'');
+  st.innerHTML = on? '<b>Out of balance.</b> Our extra 40 looks small next to nature\'s 770. But nature\'s in and out cancel. Ours is extra, every single year, and about half of it stays.' : '<b>Balanced.</b> What goes up comes back down.';
+  Machines.set(on? {drone:.16,traffic:.1} : {});
+  if (on) sfx('rise'); else sfx('blip');
+}
+buildCycle();
+$('#ccHuman').onclick = () => setHumans(true);
+$('#ccReset').onclick = () => setHumans(false);
+
+/* ===================== SCENE 8 : THE CARBON BUDGET GAME ===================== */
+const LEVERS=[
+ {id:'power',    icon:'⚡', name:'Power stations',              short:'Power', canvas:'Power', val:14},
+ {id:'transport',icon:'🚗', name:'Cars, trucks, ships & planes', short:'Transport', canvas:'Cars', val:8},
+ {id:'factory',  icon:'🏭', name:'Factories',                   short:'Factories', canvas:'Factories', val:9},
+ {id:'homes',    icon:'🏠', name:'Homes & cooking',             short:'Homes', canvas:'Homes', val:5},
+ {id:'forestcut',icon:'🪓', name:'Cutting forests',             short:'Cut forests', canvas:'Cut trees', val:4},
+ {id:'plant',    icon:'🌳', name:'New forests & CO₂ removal',   short:'New forests',val:4, sink:true},
+];
+const TOOLS = {
+ power: [
+  {ico:'☀️', nm:'Solar panels', short:'Solar', how:'Sunlight knocks electrons loose inside a silicon wafer. Electricity, with no fire at all.', r:'ready', india:'Bhadla, Rajasthan: a solar park the size of 8,000 football pitches.', share:5},
+  {ico:'🌬️', nm:'Wind turbines', short:'Wind', how:'Blades as long as a cricket pitch spin a generator. One big turbine powers thousands of homes.', r:'ready', india:'Tamil Nadu and Gujarat have thousands of them.', share:3},
+  {ico:'💧', nm:'Water power', short:'Hydro', how:'Falling water spins turbines. Dams, rivers, and even the tide.', r:'ready', india:'Karnataka\'s Sharavathi plant has run since the 1960s.', share:1},
+  {ico:'⚛️', nm:'Nuclear', short:'Nuclear', how:'Splitting uranium atoms makes heat, heat makes steam, steam spins turbines. No CO₂, but slow to build.', r:'ready', india:'Kudankulam, Tamil Nadu.', share:2},
+  {ico:'🔋', nm:'Giant batteries', short:'Batteries', how:'Store the day\'s sunshine for the night. Or pump water uphill by day and let it fall after dark.', r:'soon', india:'Battery farms are going up next to India\'s solar parks.', share:2},
+  {ico:'🔌', nm:'Super-wires', short:'Wires', how:'Long-distance lines carry Rajasthan\'s sun to Bengaluru\'s fans, so clean power reaches everyone.', r:'ready', india:'India\'s grid already links every state.', share:1},
+ ],
+ transport: [
+  {ico:'🛵', nm:'Electric scooters & cars', short:'E-scooters', how:'A battery instead of a petrol tank, a motor instead of an engine. Charge it from the sun.', r:'ready', india:'Most electric vehicles in India are scooters and auto-rickshaws.', share:3},
+  {ico:'🚌', nm:'Electric buses & metro', short:'E-buses', how:'One bus carries 60 people, the metro carries thousands, all on electricity.', r:'ready', india:'Bengaluru Metro and BMTC\'s electric buses.', share:1.5},
+  {ico:'🚆', nm:'Electric trains', short:'Trains', how:'The cleanest way to move heavy things a long way.', r:'ready', india:'Indian Railways now runs almost entirely on electricity.', share:1},
+  {ico:'🚲', nm:'Bicycles & walking', short:'Bikes', how:'Zero CO₂, zero cost, and good for you.', r:'ready', india:'Cycle lanes are growing in Indian cities.', share:.5},
+  {ico:'✈️', nm:'New fuels for planes & ships', short:'Plane fuel', how:'The hardest one. Fuels made from plants or hydrogen for planes; ships are even trying sails again.', r:'dream', india:'Indian airlines have tested plant-based fuel.', share:2},
+ ],
+ factory: [
+  {ico:'♻️', nm:'Recycling', short:'Recycle', how:'Melting old cans and scrap uses a fraction of the energy of making new metal.', r:'ready', india:'India recycles most of its steel scrap and plastic bottles.', share:2},
+  {ico:'🔩', nm:'Green steel', short:'Green steel', how:'Make iron with hydrogen instead of coal. The waste is water, not CO₂.', r:'soon', india:'Indian steel makers are testing hydrogen furnaces.', share:2.5},
+  {ico:'🧱', nm:'Cleaner cement', short:'Cement', how:'New recipes that burn less limestone, and catching the CO₂ at the chimney.', r:'soon', india:'India is the world\'s second-biggest cement maker, so this matters.', share:2},
+  {ico:'🔥', nm:'Electric furnaces', short:'E-furnace', how:'Heat from electricity instead of burning gas, and the electricity from the sun.', r:'ready', india:'Already used for melting scrap steel.', share:1.5},
+  {ico:'🔧', nm:'Make it last', short:'Make it last', how:'Repair, share, buy less. Design things to last 20 years, not 2.', r:'ready', india:'India\'s repair shops are world champions at this.', share:1},
+ ],
+ homes: [
+  {ico:'🍳', nm:'Induction stoves', short:'Induction', how:'A magnetic field heats the pan directly. No flame, no gas cylinder, and faster.', r:'ready', india:'Runs on rooftop solar in the daytime.', share:1.5},
+  {ico:'🏠', nm:'Rooftop solar', short:'Roof solar', how:'The roof makes the electricity the house uses.', r:'ready', india:'India is putting solar on millions of roofs.', share:1},
+  {ico:'💡', nm:'Efficient fans, lights & ACs', short:'Efficient', how:'An LED uses a tenth of an old bulb. A BLDC fan uses half of an old fan. 5-star ACs sip power.', r:'ready', india:'Look for the star label on appliances.', share:1},
+  {ico:'🌡️', nm:'Heat pumps', short:'Heat pump', how:'A fridge working backwards: it moves heat instead of making it, with a third of the electricity.', r:'soon', india:'Used for hot water in Indian hotels and hospitals.', share:1},
+  {ico:'🏡', nm:'Cool roofs & shade', short:'Cool roof', how:'White roofs bounce the sun away. Shade trees keep homes cool without an AC.', r:'ready', india:'Ahmedabad paints roofs white to beat the heat.', share:.5},
+ ],
+ forestcut: [
+  {ico:'🌲', nm:'Protect forests', short:'Protect', how:'Rangers, laws, and paying villages to keep forests standing.', r:'ready', india:'India\'s forest cover is slowly growing again.', share:2},
+  {ico:'🌾', nm:'Farm smarter', short:'Farm smart', how:'Better seeds and drip irrigation grow more food on the same land, so no forest needs clearing.', r:'ready', india:'Drip irrigation is spreading across Karnataka farms.', share:1},
+  {ico:'🍛', nm:'Waste less food', short:'No waste', how:'A third of all food is thrown away. Less waste means less land.', r:'ready', india:'Finish your plate: it counts.', share:.5},
+  {ico:'🛒', nm:'Buy wisely', short:'Buy wisely', how:'Paper, palm oil and timber from farms, not rainforests.', r:'ready', india:'Look for the recycled and certified labels.', share:.5},
+ ],
+ plant: [
+  {ico:'🌳', nm:'Plant & protect trees', short:'Trees', how:'A tree is made of CO₂ pulled from the air. Mangroves on the coast are champions.', r:'ready', india:'The Sundarbans mangroves store huge amounts of carbon.', share:2},
+  {ico:'🪱', nm:'Healthy soils & wetlands', short:'Soils', how:'Living soil holds carbon. Wetlands hold even more.', r:'ready', india:'Farmers adding compost instead of burning stubble.', share:1},
+  {ico:'🌀', nm:'CO₂-sucking machines', short:'Air-suckers', how:'Giant fans push air through filters; the CO₂ is pumped underground into rock. Works, but tiny and expensive today.', r:'dream', india:'None in India yet.', share:.5},
+  {ico:'🪨', nm:'Rocks that eat CO₂', short:'Rocks', how:'Crushed volcanic rock spread on fields slowly soaks up CO₂ from the rain.', r:'dream', india:'Being tested on farms in India.', share:.5},
+ ],
+};
+const R_LABEL = { ready:'Ready now', soon:'Getting better fast', dream:'Still being invented' };
+const GAME = { vals:{}, on:{}, sel:null, parts:[], fx:[], acc:[0,0,0,0,0], running:false, last:0, W:0, H:0, won:false };
+LEVERS.forEach(l => { GAME.on[l.id]=new Set(); GAME.vals[l.id] = l.sink? 0 : l.val; });
+function leverValue(id){ const l=LEVERS.find(x=>x.id===id), sum=[...GAME.on[id]].reduce((a,i)=>a+TOOLS[id][i].share,0); return l.sink? Math.min(l.val,sum) : Math.max(0, l.val-sum); }
+function leverDone(id){ const l=LEVERS.find(x=>x.id===id); return l.sink? leverValue(id)>=l.val : leverValue(id)<=0; }
+function gameTotals(){
+  const v=GAME.vals, S=v.power+v.transport+v.factory+v.homes+v.forestcut, F=12+v.plant, O=10;
+  return {S, F, O, air:S-F-O};
+}
+function updateGameAudio(){ const {S}=gameTotals(); Machines.set({drone:.28*S/40, traffic:.32*S/40}); Nature.set({waves:.25, birds: clamp(1-S/28,0,1)*.9}); }
+const fnum = n => Number.isInteger(n)? n : n.toFixed(1);
+function renderBoard(){
+  $('#rows').innerHTML = LEVERS.map(l => {
+    const v=leverValue(l.id), done=leverDone(l.id);
+    const chips = TOOLS[l.id].map((t,i)=>`<button class="chip ${GAME.on[l.id].has(i)? 'on '+t.r : ''} ${GAME.sel && GAME.sel[0]===l.id && GAME.sel[1]===i ? 'sel':''}" data-id="${l.id}" data-i="${i}" style="flex:${t.share} ${t.share} 0" title="${t.nm}: ${l.sink?'+':'−'}${t.share}"><span class="top"><span class="ico">${t.ico}</span><span class="n">${l.sink?'+':'−'}${t.share}</span></span><span class="nm">${t.short}</span></button>`).join('');
+    return `<div class="row ${done?'done':''}"><div class="row-h"><span class="ico">${l.icon}</span><span class="nm">${l.name}</span><span class="rv">${l.sink? '+'+fnum(v) : fnum(v)}<small>${l.sink? 'of +'+l.val : 'today '+l.val}</small></span></div><div class="bar">${chips}</div></div>`;
+  }).join('');
+  $$('#rows .chip').forEach(b => b.onclick = () => toggleTool(b.dataset.id, +b.dataset.i));
+  renderDetail();
+}
+function renderDetail(){
+  const d=$('#detail');
+  if (!GAME.sel){ d.className='detail empty'; d.innerHTML='Press any tool. The card here tells you what it is and how it works; the number says how much it cuts.'; return; }
+  const [id,i]=GAME.sel, l=LEVERS.find(x=>x.id===id), t=TOOLS[id][i], on=GAME.on[id].has(i);
+  d.className='detail';
+  d.innerHTML=`<div class="ico">${t.ico}</div><div><div class="nm">${t.nm}<span class="pill ${t.r}">${R_LABEL[t.r]}</span></div><div class="how">${t.how}</div><div class="india">${t.india}</div></div><div class="impact" style="color:${on? 'var(--ok)':'var(--muted)'}">${l.sink?'+':'−'}${t.share}<small>billion tonnes a year<br>${on? 'in use' : 'not yet used'}</small></div>`;
+}
+function toggleTool(id,i){
+  ensureAudio();
+  const set=GAME.on[id];
+  if (set.has(i)){ set.delete(i); sfx('pop'); } else { set.add(i); sfx('blip'); }
+  GAME.sel=[id,i];
+  GAME.vals[id]=leverValue(id);
+  const wasDone = leverDone(id) && set.has(i);
+  updateGame(); renderBoard();
+  if (wasDone && !GAME.won) sfx('seal');
+}
+function updateGame(){
+  const {S,F,O,air}=gameTotals();
+  $('#gmOut').textContent=fnum(S); $('#gmForest').textContent=fnum(F); $('#gmOcean').textContent=O;
+  $('#gmAir').textContent = (air<0?'−':'')+fnum(Math.abs(air)); $('#gmPpm').textContent = (air>0?'+':air<0?'−':'')+(Math.abs(air)/7.8).toFixed(1);
+  $('#gmAirTile').classList.toggle('zero', air<=0); $('#gmPpmTile').classList.toggle('zero', air<=0);
+  const v=$('#gmVerdict');
+  if (air>15){ v.className='verdict'; v.textContent='The air is filling up fast. Which tool will you use first?'; }
+  else if (air>8){ v.className='verdict'; v.textContent='Better! Still filling up. Keep going.'; }
+  else if (air>0.01){ v.className='verdict'; v.textContent='So close. One more tool…'; }
+  else { v.className='verdict win'; v.textContent='NET ZERO! The air stops filling up. (For now: over the years forests and the sea slow down, so keep going.)'; }
+  const winNow = air<=0.01; if (winNow && !GAME.won) sfx('seal'); GAME.won=winNow;
+  if (cur===8) updateGameAudio();
+}
+$('#gmReset').onclick = () => { LEVERS.forEach(l => { GAME.on[l.id].clear(); GAME.vals[l.id] = l.sink? 0 : l.val; }); GAME.sel=null; updateGame(); renderBoard(); };
+const gc=$('#gameCanvas'), gctx=gc.getContext('2d');
+GAME.resize = function(){ const dpr=Math.min(2,window.devicePixelRatio||1); this.W=gc.clientWidth; this.H=gc.clientHeight; gc.width=Math.max(1,this.W*dpr); gc.height=Math.max(1,this.H*dpr); gctx.setTransform(dpr,0,0,dpr,0,0); };
+GAME.srcX = i => GAME.W*(0.075+i*0.122);
+GAME.update = function(dt){
+  const {S,F,O}=gameTotals(), W=this.W, H=this.H;
+  const ids=['power','transport','factory','homes','forestcut'];
+  ids.forEach((id,i) => {
+    this.acc[i] += this.vals[id]*1.25*dt;
+    while (this.acc[i]>=1){ this.acc[i]-=1;
+      const r=Math.random(), pF=S>0? F/S:1, pO=S>0? O/S:0;
+      const fate = r<pF? 'forest' : r<pF+pO? 'ocean' : 'stay';
+      this.parts.push({x:this.srcX(i)+(Math.random()-.5)*12, y:H*.70, vx:(Math.random()-.5)*20, vy:-(55+Math.random()*45), ph:'rise', fate, top:H*(.21+Math.random()*.28), t:0, life:22+Math.random()*8, w:Math.random()*6.28});
+    }
+  });
+  const fT={x:W*.72, y:H*.70}, oT={x:W*.91, y:H*.66};
+  for (const p of this.parts){
+    p.t+=dt;
+    if (p.ph==='rise'){ p.y+=p.vy*dt; p.x+=p.vx*dt+Math.sin(p.t*3+p.w)*.5; if (p.y<=p.top) p.ph='sky'; }
+    else if (p.fate==='stay'){ p.x+=(8+Math.sin(p.t*.7+p.w)*14)*dt; p.y+=Math.cos(p.t*.9+p.w)*10*dt; if (p.x>W+6) p.x=-6; if (p.y<H*.2) p.y=H*.2; if (p.y>H*.52) p.y=H*.52; }
+    else { const T=p.fate==='forest'? fT:oT, dx=T.x+Math.sin(p.w)*W*.05-p.x, dy=T.y-p.y, d=Math.hypot(dx,dy); const sp=110*dt; if (d<sp+6){ p.dead=true; this.fx.push({x:p.x,y:p.y,t:0,c:p.fate==='forest'?'#2C9C68':'#3FA9F0'}); } else { p.x+=dx/d*sp; p.y+=dy/d*sp; } }
+    if (p.t>p.life) p.dead=true;
+  }
+  this.parts = this.parts.filter(p=>!p.dead);
+  const stay = this.parts.filter(p=>p.fate==='stay'&&p.ph==='sky');
+  if (stay.length>360){ let n=stay.length-360; for (const p of stay){ if (n-- <= 0) break; p.dead=true; } this.parts=this.parts.filter(p=>!p.dead); }
+  this.fx.forEach(f=>f.t+=dt); this.fx=this.fx.filter(f=>f.t<.5);
+};
+GAME.draw = function(){
+  const c=gctx, W=this.W, H=this.H, {S,F,O,air}=gameTotals();
+  const sky=c.createLinearGradient(0,0,0,H*.6); sky.addColorStop(0,'#8FB9E0'); sky.addColorStop(1,'#E3EEF6');
+  c.fillStyle=sky; c.fillRect(0,0,W,H);
+  c.fillStyle=`rgba(96,100,110,${clamp(air/18,0,1)*.5})`; c.fillRect(0,0,W,H*.6);
+  c.fillStyle='#7FA86B'; c.fillRect(0,H*.6,W,H*.4);
+  c.fillStyle='#8FB27A'; c.beginPath(); c.moveTo(0,H*.62); c.quadraticCurveTo(W*.3,H*.56,W*.6,H*.62); c.lineTo(W*.6,H); c.lineTo(0,H); c.fill();
+  c.fillStyle='#2F7FB8'; c.fillRect(W*.83,H*.62,W*.17,H*.38);
+  c.strokeStyle='#9CC7E0'; c.lineWidth=3; c.lineCap='round';
+  for (let k=0;k<3;k++){ c.beginPath(); const y0=H*(.68+k*.09); for (let x=W*.84; x<W-8; x+=18){ c.moveTo(x,y0); c.quadraticCurveTo(x+9,y0-7,x+18,y0); } c.stroke(); }
+  const tree=(x,y,h,col)=>{ c.fillStyle='#5A4636'; c.fillRect(x-3,y-6,6,12); c.fillStyle=col; c.beginPath(); c.moveTo(x-h*.5,y-4); c.lineTo(x+h*.5,y-4); c.lineTo(x,y-h); c.fill(); c.beginPath(); c.moveTo(x-h*.38,y-h*.45); c.lineTo(x+h*.38,y-h*.45); c.lineTo(x,y-h*1.25); c.fill(); };
+  const nTrees = 5 + Math.round(this.vals.plant*2);
+  for (let i=0;i<nTrees;i++){ const x=W*(.655+ (i%6)*.03 + Math.floor(i/6)*.012), y=H*(.72 + Math.floor(i/6)*.06), h=H*(.06+(i%3)*.012); tree(x,y,h, i<5? '#2F7A46':'#3C9A57'); }
+  const fontE = Math.round(H*.07);
+  const ids=['power','transport','factory','homes','forestcut'];
+  c.textAlign='center';
+  ids.forEach((id,i)=>{ const l=LEVERS.find(x=>x.id===id), x=this.srcX(i);
+    c.font=`${fontE}px system-ui, "Apple Color Emoji", "Segoe UI Emoji", sans-serif`; c.fillStyle='#0F2238'; c.globalAlpha = this.vals[id]>0? 1 : .45; c.fillText(l.icon, x, H*.79); c.globalAlpha=1;
+    c.font=`700 ${Math.round(H*.017)}px "JetBrains Mono", monospace`; c.fillStyle='#0F2238'; c.fillText(l.canvas, x, H*.84);
+    c.font=`900 ${Math.round(H*.036)}px "Big Shoulders Display","Bebas Neue",Impact,sans-serif`; c.fillStyle= this.vals[id]>0? '#0F2238' : '#2C9C68'; c.fillText(fnum(this.vals[id]), x, H*.885);
+  });
+  c.font=`700 ${Math.round(H*.017)}px "JetBrains Mono", monospace`; c.fillStyle='#0F2238';
+  c.fillText('Forests', W*.72, H*.86); c.fillText('The sea', W*.915, H*.86);
+  c.font=`900 ${Math.round(H*.036)}px "Big Shoulders Display","Bebas Neue",Impact,sans-serif`; c.fillStyle='#EAF7F0';
+  c.fillText('−'+fnum(F), W*.72, H*.905); c.fillText('−'+O, W*.915, H*.905);
+  c.fillStyle='#3B3F47';
+  for (const p of this.parts){ c.beginPath(); c.arc(p.x,p.y,3.2,0,6.29); c.fill(); }
+  for (const f of this.fx){ c.strokeStyle=f.c; c.globalAlpha=1-f.t*2; c.lineWidth=2; c.beginPath(); c.arc(f.x,f.y,4+f.t*30,0,6.29); c.stroke(); }
+  c.globalAlpha=1;
+  c.font=`700 ${Math.round(H*.02)}px "JetBrains Mono", monospace`; c.fillStyle='#3B556E'; c.textAlign='left';
+  c.fillText('each dot = CO₂ · numbers are billions of tonnes a year', 14, H*.17);
+};
+GAME.frame = function(t){ if (!this.running) return; const dt=Math.min(.05,(t-this.last)/1000||.016); this.last=t; this.update(dt); this.draw(); requestAnimationFrame(t=>this.frame(t)); };
+GAME.start = function(){ this.resize(); if (this.running) return; this.running=true; this.last=performance.now(); requestAnimationFrame(t=>this.frame(t)); };
+GAME.stop = function(){ this.running=false; };
+window.addEventListener('resize', () => GAME.resize());
+renderBoard(); updateGame();
+hooks[8] = { enter(){ GAME.start(); renderBoard(); updateGame(); }, leave(){ GAME.stop(); } };
+
+/* ===================== SCENE 9 : QUIZ + FINALE ===================== */
+const QUIZ = [
+ {q:'What is trapped inside old ice?', a:['Tiny dinosaurs','Bubbles of ancient air','Frozen fish'], c:1},
+ {q:'The deeper you drill, the ice gets…', a:['Younger','Warmer','Older'], c:2},
+ {q:'Every time CO₂ went up, the Earth got…', a:['Colder','Warmer','Purple'], c:1},
+ {q:'Where does the CO₂ we make go?', a:['It all stays in the air','About half is soaked up by forests and the sea','It floats off to the Moon'], c:1},
+];
+let answered=0;
+$('#quiz').innerHTML = QUIZ.map((q,i)=>`<div class="qcard" data-i="${i}"><div class="qn">Question ${i+1}</div><h3>${q.q}</h3>${q.a.map((a,j)=>`<button data-j="${j}">${a}</button>`).join('')}</div>`).join('');
+$$('.qcard button').forEach(b => b.onclick = () => {
+  ensureAudio();
+  const card=b.closest('.qcard'), q=QUIZ[+card.dataset.i];
+  if (+b.dataset.j===q.c){ b.classList.add('right'); card.classList.add('answered'); sfx('good'); answered++; $('#quizScore').textContent = answered===4? 'All four! Time to go back to Vostok.' : `${answered} of 4 answered`; if (answered===4) $('#quizNext').hidden=false; }
+  else { b.classList.add('wrong'); sfx('bad'); }
+});
+$('#quizNext').onclick = () => go(10);
+
+/* ===================== SCENE 10 : BACK TO VOSTOK ===================== */
+const endFX = SnowFX($('#snowfx2'), {n:200});
+const END = { step:1, buried:false, sealedNum:null, pledged:false };
+function buildEndArt(){
+  const art=$('#endArt');
+  let s=`<defs><linearGradient id="gSkyN" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#03081A"/><stop offset=".55" stop-color="#0B1A44"/><stop offset="1" stop-color="#2A3A72"/></linearGradient>
+  <linearGradient id="gPlainN" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7F95B0"/><stop offset=".3" stop-color="#A9BDD0"/><stop offset="1" stop-color="#C9D8E4"/></linearGradient>
+  <linearGradient id="gAur" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#3CE3A0" stop-opacity="0"/><stop offset=".3" stop-color="#3CE3A0" stop-opacity=".55"/><stop offset=".6" stop-color="#8A7CFF" stop-opacity=".5"/><stop offset="1" stop-color="#3CE3A0" stop-opacity="0"/></linearGradient>
+  <filter id="blur" x="-20%" y="-50%" width="140%" height="200%"><feGaussianBlur stdDeviation="18"/></filter></defs>
+  <rect width="1600" height="900" fill="url(#gSkyN)"/>`;
+  let seed=7; const rnd=()=>{ seed=(seed*16807)%2147483647; return seed/2147483647; };
+  for (let i=0;i<140;i++){ const x=rnd()*1600, y=rnd()*520, r=rnd()*1.4+.3; s+=`<circle cx="${x.toFixed(0)}" cy="${y.toFixed(0)}" r="${r.toFixed(1)}" fill="#fff" opacity="${(.4+rnd()*.6).toFixed(2)}"/>`; }
+  s+=`<path d="M0 300 C300 180 500 340 800 240 S1300 140 1600 260 L1600 360 C1300 240 1100 400 800 330 S300 300 0 400 Z" fill="url(#gAur)" filter="url(#blur)" opacity=".8"/>`;
+  s+=`<rect x="0" y="560" width="1600" height="340" fill="url(#gPlainN)"/>`;
+  s+=`<g stroke="#8FA8C0" stroke-opacity=".5" fill="none" stroke-width="2" stroke-linecap="round"><path d="M0 640 q120 -10 240 0 t260 -6 t300 8 t280 -4 t260 6 t260 -2"/><path d="M0 705 q160 -16 320 0 t320 -10 t340 12 t320 -6 t300 8"/><path d="M0 790 q200 -22 400 0 t400 -14 t420 16 t380 -8"/></g>`;
+  art.innerHTML = s;
+  const station = $('#station').cloneNode(true); station.removeAttribute('id');
+  const lift = {'#FFD27A':'#FFE3A0','#2C3552':'#46527A','#3B4668':'#55628C','#1D2438':'#3A4466','#232B45':'#3A4466'};
+  station.querySelectorAll('[fill]').forEach(el => { const f=el.getAttribute('fill'); if (lift[f]) el.setAttribute('fill', lift[f]); });
+  station.querySelectorAll('[stroke="#1D2438"],[stroke="#3B4668"]').forEach(el => el.setAttribute('stroke','#55628C'));
+  art.appendChild(station);
+  const glow=document.createElementNS('http://www.w3.org/2000/svg','rect'); glow.setAttribute('x',0); glow.setAttribute('y',566); glow.setAttribute('width',1600); glow.setAttribute('height',70); glow.setAttribute('fill','url(#gDrift)'); glow.setAttribute('opacity','.35'); art.appendChild(glow);
+}
+function buildBury(){
+  const svg=$('#burySvg');
+  svg.innerHTML=`<rect x="20" y="22" width="120" height="190" rx="8" fill="#DCEAF3" opacity=".9"/><g id="buryLayers"></g>
+    <line x1="14" y1="22" x2="146" y2="22" stroke="#FFD79A" stroke-width="2"/><text x="150" y="27">surface</text>
+    <line x1="20" y1="${22+95/120*190}" x2="140" y2="${22+95/120*190}" stroke="#EE5A2A" stroke-dasharray="4 4" stroke-width="1.5"/><text x="150" y="${26+95/120*190}" style="fill:#FF9A78">95 m · seals</text>
+    <g id="buryBubble" transform="translate(80,36)"><circle r="11" fill="#F2B441" stroke="#B27A12" stroke-width="2"/><text x="0" y="4" text-anchor="middle" style="fill:#0F2238;font-size:9px;font-weight:700">air</text></g>
+    <text x="150" y="70" style="font-size:12px">2026 · 428 ppm</text>`;
+}
+function runBury(){
+  if (END.buried) return; END.buried=true; ensureAudio(); sfx('blip');
+  $('#buryBtn').disabled=true; $('#endBubble1').classList.add('show');
+  const t0=performance.now(), dur=reduceMotion?0:5200, layers=$('#buryLayers');
+  let drawn=0;
+  const step = now => {
+    const p = dur? Math.min(1,(now-t0)/dur) : 1;
+    const depth = 95*p, year = 2026 + Math.round(2800*Math.pow(p,1.25));
+    const want = Math.floor(p*26);
+    while (drawn<want){ const th = 190*(95/120)/26; const y=22+drawn*th; layers.innerHTML += `<rect x="20" y="${y.toFixed(1)}" width="120" height="${(th-.8).toFixed(1)}" fill="${drawn%2?'#F4F9FC':'#CFE0EC'}"/>`; drawn++; }
+    $('#buryBubble').setAttribute('transform', `translate(80,${(36+depth/120*190).toFixed(1)})`);
+    $('#buryYear').textContent = p>=1? '≈ 4800' : Math.round(year/10)*10; $('#buryDepth').textContent = Math.round(depth)+' m';
+    const st=$('#buryState');
+    if (p>=1){ st.textContent='Sealed. A time capsule of our air, ready for whoever drills it up.'; st.classList.add('sealed'); sfx('seal'); $('#endBubble1').classList.add('sunk'); $('.end-step[data-step="1"] .end-next').hidden=false; }
+    else if (depth>20) st.textContent='squeezed snow · nearly trapped';
+    else st.textContent='fresh snow · this year\'s air';
+    if (p<1) requestAnimationFrame(step);
+  };
+  step(t0);
+}
+function reactTo(n){
+  const r=$('#numReact'); r.className='status';
+  if (n<428){ r.innerHTML=`<b>${n}: lower than today.</b> Even with every tool pressed, the air clears slowly, so a bubble that has <b>stopped climbing</b> by 2050 is the win. Aim there, and then keep going.`; r.classList.add('sealed'); }
+  else if (n<=450){ r.innerHTML=`<b>${n}: about level with today.</b> That is the win. The line has stopped climbing, and it takes nearly every tool on the board. Then it slowly comes down.`; r.classList.add('sealed'); }
+  else if (n<=500){ r.innerHTML=`<b>${n}: still climbing, but slower.</b> Some tools pressed, not all. Which ones would you add?`; }
+  else { r.innerHTML=`<b>${n}: climbing fast.</b> That is what happens if nobody presses the tools. You know better now. Which one first?`; }
+}
+function sealNumber(){
+  ensureAudio(); const n=clamp(Math.round(+$('#numIn').value||428),150,999); $('#numIn').value=n; END.sealedNum=n;
+  const b=$('#endBubble2'); b.querySelector('span').textContent=n+' ppm'; b.classList.remove('sunk'); b.classList.add('show');
+  reactTo(n); sfx('seal');
+  setTimeout(()=>b.classList.add('sunk'), 2200);
+  $('.end-step[data-step="2"] .end-next').hidden=false;
+}
+const PLEDGES=[
+ {ico:'🚲', t:'Walk or cycle to school'},
+ {ico:'💡', t:'Switch it off when you leave'},
+ {ico:'🌳', t:'Plant or protect a tree'},
+ {ico:'☀️', t:'Ask at home about rooftop solar or an induction stove'},
+];
+$('#pledges').innerHTML = PLEDGES.map((p,i)=>`<button class="pledge" data-i="${i}"><span class="ico">${p.ico}</span><span>${p.t}</span></button>`).join('');
+$$('#pledges .pledge').forEach(b => b.onclick = () => {
+  ensureAudio(); $$('#pledges .pledge').forEach(x=>x.classList.toggle('on', x===b));
+  $('#pledgeReact').innerHTML = `<b>Good choice.</b> ${PLEDGES[+b.dataset.i].t}. Small, real, and it starts this week.`; $('#pledgeReact').classList.add('sealed');
+  if (!END.pledged){ END.pledged=true; sfx('seal'); }
+  $('#endLine').hidden=false; $('#btnRestart').hidden=false;
+  if (Wind.ctx) Wind.setLevel(1.1);
+});
+function showEndStep(n){
+  END.step=n;
+  $$('.end-step').forEach(el => el.hidden = +el.dataset.step!==n);
+  if (n===2) setTimeout(()=>$('#numIn').focus({preventScroll:true}), 50);
+}
+function endNext(){
+  if (END.step===1 && !END.buried){ runBury(); return; }
+  if (END.step===1){ showEndStep(2); return; }
+  if (END.step===2){ if (!END.sealedNum) sealNumber(); else showEndStep(3); return; }
+}
+$$('.end-next').forEach(b => b.onclick = () => showEndStep(END.step+1));
+$('#buryBtn').onclick = runBury;
+$('#sealBtn').onclick = sealNumber;
+$('#numDown').onclick = () => { $('#numIn').value = clamp((+$('#numIn').value||428)-10,150,999); };
+$('#numUp').onclick = () => { $('#numIn').value = clamp((+$('#numIn').value||428)+10,150,999); };
+$('#numIn').addEventListener('keydown', e => { if (e.key==='Enter'){ e.preventDefault(); sealNumber(); e.stopPropagation(); } else if (e.key==='ArrowUp'||e.key==='ArrowDown'||e.key===' ') e.stopPropagation(); });
+$('#btnRestart').onclick = () => go(0);
+buildEndArt(); buildBury();
+hooks[9] = { enter(){ if (answered===4) $('#quizNext').hidden=false; } };
+hooks[10] = { enter(){ endFX.start(); }, leave(){ endFX.stop(); } };
+
+$('#btnPrev').disabled = true;
+renderNotes();
+})();
+</script>
+
+</body>
+</html>
