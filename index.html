@@ -2,14 +2,16 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="description" content="An interactive classroom journey from Vostok Station into the Antarctic ice: ice cores as time machines, trapped air, 420,000 years of CO₂, and what we can do about it.">
 <meta name="theme-color" content="#0B1A44">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="The Ice Remembers">
 <meta property="og:type" content="website">
 <meta property="og:title" content="The Ice Remembers">
 <meta property="og:description" content="An interactive classroom journey from Vostok Station into the Antarctic ice: ice cores, trapped air, 420,000 years of CO₂, and what we can do about it.">
-<meta property="og:image" content="https://planetfactory.in/preview.png">
-<meta property="og:url" content="https://planetfactory.in/">
+<meta property="og:image" content="https://ice.blobbook.com/preview.png">
+<meta property="og:url" content="https://ice.blobbook.com/">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230B1A44'/%3E%3Ccircle cx='32' cy='36' r='14' fill='%23BFE3FA'/%3E%3Ccircle cx='27' cy='31' r='4' fill='%23fff'/%3E%3C/svg%3E">
 <title>The Ice Remembers</title>
@@ -31,11 +33,12 @@
   --rail:64px;
 }
 *{box-sizing:border-box}
+[hidden]{display:none!important}
 html,body{height:100%;margin:0}
 body{background:var(--snow);color:var(--ink);font-family:var(--body);font-size:clamp(14px,1.1vw,22px);line-height:1.45;overflow:hidden;-webkit-font-smoothing:antialiased}
 button{font:inherit;color:inherit;cursor:pointer}
 b,strong{font-weight:700}
-#deck{position:fixed;inset:0;overflow:hidden;background:var(--snow)}
+#deck{position:fixed;inset:0;overflow:hidden;background:var(--snow);touch-action:pan-y}
 
 /* ---------- scenes ---------- */
 .scene{position:absolute;inset:0;overflow:hidden;padding:4vh 4vw 9vh calc(var(--rail) + 3.5vw);opacity:0;visibility:hidden;transform:translateY(3vh);transition:opacity .55s ease,transform .55s ease,visibility 0s linear .55s}
@@ -91,7 +94,7 @@ input[type=range]::-moz-range-thumb{width:28px;height:28px;border-radius:50%;bac
 .hud button svg{width:1.15em;height:1.15em;display:block}
 .hud button.on{background:var(--ice-deep);color:#fff;border-color:var(--ice-deep)}
 .hud button:hover{border-color:var(--ice-mid)}
-.hud .counter{font-family:var(--mono);font-size:.78em;color:var(--muted);margin:0 .5em;font-variant-numeric:tabular-nums;background:rgba(255,255,255,.7);padding:.2em .5em;border-radius:6px}
+.hud .counter{font-family:var(--mono);font-size:.78em;color:var(--muted);margin:0 .5em;font-variant-numeric:tabular-nums;background:rgba(255,255,255,.7);padding:.2em .5em;border-radius:6px;white-space:nowrap}
 .hud .arrow{width:3em;height:3em;background:var(--ice-deep);color:#fff;border-color:var(--ice-deep)}
 .hud .arrow:hover{background:var(--abyss)}
 .hud .arrow:disabled{opacity:.35}
@@ -226,18 +229,18 @@ input[type=range]::-moz-range-thumb{width:28px;height:28px;border-radius:50%;bac
 .row-h .rv small{display:block;font-family:var(--mono);font-size:.38em;color:var(--muted);font-weight:500;letter-spacing:.04em}
 .row.done .rv{color:var(--ok)}
 .bar{display:flex;gap:4px}
-.chip{flex:1 1 0;min-width:4.4em;border:2px dashed var(--line);background:#fff;border-radius:9px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.1em;padding:.3em .3em .25em;font:inherit;color:var(--ink-soft);cursor:pointer;overflow:hidden;white-space:nowrap;transition:background .2s,border-color .2s,transform .1s}
-.chip .top{display:flex;align-items:center;gap:.3em}
-.chip:hover{border-color:var(--ice-mid);transform:translateY(-1px)}
-.chip:active{transform:translateY(1px)}
-.chip .ico{font-size:1.2em;flex:none;line-height:1}
-.chip .nm{font-size:.64em;font-weight:700;overflow:hidden;text-overflow:ellipsis;max-width:100%}
-.chip .n{font-family:var(--mono);font-size:.78em;font-weight:700;flex:none}
-.chip.on{border-style:solid;color:#fff}
-.chip.on.ready{background:var(--ok);border-color:var(--ok)}
-.chip.on.soon{background:var(--gold);border-color:var(--gold);color:var(--ink)}
-.chip.on.dream{background:var(--ice-mid);border-color:var(--ice-mid)}
-.chip.sel{box-shadow:0 0 0 3px var(--ember)}
+.tchip{flex:1 1 0;min-width:4.4em;border:2px dashed var(--line);background:#fff;border-radius:9px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.1em;padding:.3em .3em .25em;font:inherit;color:var(--ink-soft);cursor:pointer;overflow:hidden;white-space:nowrap;transition:background .2s,border-color .2s,transform .1s}
+.tchip .top{display:flex;align-items:center;gap:.3em}
+.tchip:hover{border-color:var(--ice-mid);transform:translateY(-1px)}
+.tchip:active{transform:translateY(1px)}
+.tchip .ico{font-size:1.2em;flex:none;line-height:1}
+.tchip .nm{font-size:.64em;font-weight:700;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.tchip .n{font-family:var(--mono);font-size:.78em;font-weight:700;flex:none}
+.tchip.on{border-style:solid;color:#fff}
+.tchip.on.ready{background:var(--ok);border-color:var(--ok)}
+.tchip.on.soon{background:var(--gold);border-color:var(--gold);color:var(--ink)}
+.tchip.on.dream{background:var(--ice-mid);border-color:var(--ice-mid)}
+.tchip.sel{box-shadow:0 0 0 3px var(--ember)}
 .detail{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:.9em;align-items:center;background:#fff;border:2px solid var(--line);border-radius:12px;padding:.55em .9em;min-height:5.4em}
 .detail.empty{grid-template-columns:1fr;border-style:dashed;color:var(--ink-soft);text-align:center}
 .detail .ico{font-size:2.3em;line-height:1}
@@ -316,15 +319,82 @@ input[type=range]::-moz-range-thumb{width:28px;height:28px;border-radius:50%;bac
 .end-bubble.sunk{opacity:0;transform:translateY(14vh) scale(.8);transition:transform 2.4s ease-in,opacity 2.2s ease-in}
 #endBubble2{left:78vw}
 
+/* ---------- jump-to-stop menu ---------- */
+.hud .counter{border:2px solid var(--line);cursor:pointer;line-height:1.4}
+.hud .counter:hover{border-color:var(--ice-mid)}
+.jump{position:absolute;right:0;bottom:3.4em;width:min(20rem,80vw);background:#fff;border:2px solid var(--line);border-radius:12px;padding:.4em;box-shadow:0 12px 40px rgba(15,34,56,.2);display:flex;flex-direction:column;gap:2px;max-height:70vh;overflow:auto;z-index:8}
+.jump button{text-align:left;border:0;background:transparent;border-radius:8px;padding:.45em .7em;font-size:.85em;display:flex;gap:.6em;align-items:center;color:var(--ink)}
+.jump button b{font-family:var(--mono);color:var(--muted);font-weight:500;min-width:1.4em}
+.jump button:hover{background:var(--snow-2)}
+.jump button.on{background:var(--ice-deep);color:#fff}
+.jump button.on b{color:#fff}
+.slider-scale .short{display:none}
+
+/* ---------- small screens & tablets ---------- */
+@media (max-width:1180px){
+  :root{--rail:44px}
+  .two{gap:2.5vw}
+  .copy p{max-width:none}
+  .slider-scale .long{display:none}.slider-scale .short{display:inline}
+  .slider-scale{font-size:.6em}
+  .hud .counter{margin:0 .2em}
+  .notes{width:min(36rem,70vw)}
+}
+@media (max-aspect-ratio:1/1){
+  .scene{padding-bottom:10vh}
+  .two{grid-template-columns:1fr;grid-template-rows:auto minmax(0,1fr);gap:2vh;align-items:start}
+  .copy{max-height:none;overflow:visible}
+  .samples{grid-template-columns:repeat(3,minmax(0,1fr));gap:2vw;align-content:start}
+  .sample{padding:.7em .5em .6em;gap:.3em}
+  .sample .age{font-size:1.15em}
+  .sample .icewrap{aspect-ratio:1/.85}
+  .sample .reading{font-size:1.9em}
+  .sample .note{font-size:.72em;min-height:0}
+  .visual{align-items:flex-start;overflow-y:auto}
+  .quiz{grid-template-columns:repeat(2,minmax(0,1fr));gap:2vw;align-content:start}
+  .qcard{padding:.7em .7em;gap:.35em}
+  .qcard h3{font-size:1.2em}
+  .qcard button{padding:.45em .6em;font-size:.9em}
+  .chart-scene{gap:.5vh}
+  .chart-head{flex-direction:column;align-items:flex-start}
+  .game-grid{grid-template-columns:1fr;grid-template-rows:auto minmax(0,1fr);gap:1.5vh}
+  .board{gap:.4em}
+  .board-intro{font-size:.8em}
+  .detail{min-height:4.4em;padding:.4em .7em}
+  .detail .how{font-size:.76em}
+  .row{grid-template-columns:8em minmax(0,1fr)}
+  .tchip{min-width:3.6em}
+  .cover-text{max-width:84vw;top:6vh}
+  .facts{right:4vw;bottom:9vh;max-width:70vw}
+  .fact{width:auto;max-width:70vw}
+  .end-panel{left:5vw;width:90vw;top:auto;bottom:4vh;transform:none;padding:1.2em 1.3em 1.1em}
+  .end-bubble{left:58vw;top:26vh}
+  #endBubble2{left:70vw}
+  .bury{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+  #tmSvg{height:100%}
+  .column-wrap{height:100%}
+  #world{max-height:100%}
+  #hs{max-height:100%}
+  #cycle{height:100%}
+}
+@media (pointer:coarse){
+  .hud .arrow{width:3.3em;height:3.3em}
+  .hud button{width:2.9em;height:2.9em}
+  .btn{padding:.65em 1.3em}
+  .chip{padding:.45em 1em}
+  .tchip{min-height:3.4em}
+  input[type=range]{height:18px}
+  input[type=range]::-webkit-slider-thumb{width:42px;height:42px}
+  .tool:hover,.btn:hover,.tchip:hover{transform:none}
+  .qcard button{padding:.7em .8em}
+  .pledge{padding:.75em .8em}
+}
 @media (prefers-reduced-motion:reduce){
   .scene,.fact,.core-fill,.core-mark,.notes{transition:none}
   .sample.crushed .bub{animation:none;opacity:.6}
   .end-bubble{transition:none}
 }
-@media (max-aspect-ratio:1/1){
-  .two{grid-template-columns:1fr;grid-template-rows:auto 1fr;align-items:start}
-  .samples,.quiz{grid-template-columns:1fr}
-}
+
 </style>
 </head>
 <body>
@@ -486,7 +556,7 @@ input[type=range]::-moz-range-thumb{width:28px;height:28px;border-radius:50%;bac
       <label class="slider-label" for="wdSlider">Slide the CO₂ up ▸</label>
       <input type="range" id="wdSlider" min="180" max="430" value="180" aria-label="CO2 in parts per million">
       <div class="slider-scale">
-        <span style="left:0%">180</span><span style="left:40%">280</span><span class="end" style="left:48%">300 · the ice's memory ends</span><span style="left:99%">428 today</span>
+        <span style="left:0%">180</span><span style="left:40%">280</span><span class="end" style="left:48%"><span class="long">300 · the ice's memory ends</span><span class="short">300 · memory ends</span></span><span style="left:99%">428 today</span>
       </div>
     </div>
     <div class="visual">
@@ -664,7 +734,8 @@ input[type=range]::-moz-range-thumb{width:28px;height:28px;border-radius:50%;bac
   <button id="btnNotes" title="Presenter notes (N)" aria-label="Presenter notes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 4h14v16H5z"/><path d="M9 9h6M9 13h6M9 17h3"/></svg></button>
   <button id="btnSound" title="Wind on/off (M)" aria-label="Wind sound on or off"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10v4h4l5 4V6L8 10z"/><path id="sndWave" d="M16 9a4 4 0 0 1 0 6M19 6a8 8 0 0 1 0 12"/></svg></button>
   <button id="btnFull" title="Fullscreen (F)" aria-label="Fullscreen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button>
-  <span class="counter"><span id="curScene">1</span> / 11</span>
+  <button class="counter" id="btnJump" title="Jump to a stop" aria-haspopup="true"><span id="curScene">1</span> / 11</button>
+  <div class="jump" id="jump" hidden></div>
   <button class="arrow" id="btnPrev" title="Previous (←)" aria-label="Previous"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button>
   <button class="arrow" id="btnNext" title="Next (→)" aria-label="Next"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg></button>
 </nav>
@@ -871,6 +942,7 @@ function go(n){
   scenes[n].classList.add('active');
   hooks[from]?.leave?.(); hooks[n]?.enter?.();
   $('#curScene').textContent = n+1;
+  try { history.replaceState(null,'','#'+(n+1)); } catch(e){}
   $('#btnPrev').disabled = n===0; $('#btnNext').disabled = n===N-1;
   const p = n/(N-1);
   $('#coreFill').style.height = (p*100)+'%'; $('#coreMark').style.top = `calc(${p*100}% - 2px)`;
@@ -897,6 +969,24 @@ document.addEventListener('keydown', e => {
   else if (e.key==='n'||e.key==='N'){ $('#btnNotes').click(); }
   else if (e.key==='m'||e.key==='M'){ $('#btnSound').click(); }
 });
+// ---- stop names, jump menu, URL hash, swipe, fullscreen support ----
+const STOP_NAMES = ['Vostok Station','The time machine','Trapping the air','The lab','420,000 years of air','When CO₂ got high','Why so high?','The carbon cycle','The budget game','Quick quiz','Back to Vostok'];
+function renderJump(){ $('#jump').innerHTML = STOP_NAMES.map((t,i)=>`<button class="${i===cur?'on':''}" data-i="${i}"><b>${i+1}</b>${t}</button>`).join(''); $$('#jump button').forEach(b => b.onclick = () => { closeJump(); ensureAudio(); go(+b.dataset.i); }); }
+function closeJump(){ $('#jump').hidden = true; }
+$('#btnJump').onclick = e => { e.stopPropagation(); const j=$('#jump'); if (j.hidden){ renderJump(); j.hidden=false; } else closeJump(); };
+document.addEventListener('pointerdown', e => { if (!$('#jump').hidden && !e.target.closest('#jump,#btnJump')) closeJump(); });
+if (!document.documentElement.requestFullscreen && !document.documentElement.webkitRequestFullscreen) $('#btnFull').hidden = true;
+const hashStop = parseInt((location.hash||'').replace('#',''),10);
+window.addEventListener('hashchange', () => { const n=parseInt((location.hash||'').replace('#',''),10); if (n>=1 && n<=N && n-1!==cur) go(n-1); });
+let swipe=null;
+document.addEventListener('pointerdown', e => {
+  if (e.pointerType==='mouse' || e.target.closest('input,button,select,textarea,a,.tools,#rows,.bubble-input,.notes,.jump')) { swipe=null; return; }
+  swipe={x:e.clientX,y:e.clientY,t:performance.now()};
+}, {passive:true});
+document.addEventListener('pointerup', e => {
+  if (!swipe) return; const dx=e.clientX-swipe.x, dy=e.clientY-swipe.y, dt=performance.now()-swipe.t; swipe=null;
+  if (dt<900 && Math.abs(dx)>70 && Math.abs(dy)<60){ ensureAudio(); go(dx<0? cur+1 : cur-1); }
+}, {passive:true});
 // after touching a slider, hand the arrow keys back to the deck
 $$('input[type=range]').forEach(r => r.addEventListener('pointerup', () => setTimeout(()=>r.blur(), 50)));
 // never let a focus() scroll the deck itself (only .copy may scroll)
@@ -951,7 +1041,7 @@ const NOTES = [
   'Slide slowly. The line barely moves for 100 years, bends upward around 1900, then shoots up after 1950. Ask: "What happened?"',
   'Coal, oil and gas are ancient sunshine: forests and sea creatures buried for 100–300 million years. Burning them releases carbon that had been locked away since before the dinosaurs.',
   'Sources: CO₂ from Law Dome ice cores (Antarctica again!) until 1958, then Mauna Loa; population from UN estimates; emissions from the Global Carbon Project (fossil fuels and cement).',
-  'India hooks: first train 1853, Bombay to Thane; today India has the world\'s largest population and some of the biggest solar parks on Earth (Bhadla, Rajasthan).'
+  'India hooks: first train 1853, Bombay to Thane; Bengaluru was the first city in Asia with electric street lights (5 August 1905), powered by the Shivanasamudra hydro plant on the Cauvery, itself Asia\'s first big hydroelectric station (1902, built for the Kolar Gold Fields); today India has the world\'s largest population and some of the biggest solar parks on Earth (Bhadla, Rajasthan).'
  ]],
  ['The carbon cycle','Nature\'s loop, and our extra',[
   'Real numbers, rounded: plants take in about 440 billion tonnes of CO₂ a year and give back the same; the sea swaps about 330 each way. Nature\'s loop: 770 up, 770 down.',
@@ -1406,7 +1496,7 @@ const HS_STOPS=[
  {y:1750, chip:'1750', title:'Before the machines', text:'Most people are farmers. Horses, wind, water and muscles do all the work. Wood fires for cooking. About 800 million people on Earth.'},
  {y:1776, chip:'Steam', title:'The steam engine', text:'James Watt\'s engine burns coal to boil water, and the steam pushes pistons. One machine does the work of 100 horses. That coal is squashed forest from 300 million years ago: ancient sunshine, dug up and burned.'},
  {y:1825, chip:'Trains', title:'The first railway', text:'A steam train carries passengers from Stockton to Darlington in England. In 1853 India\'s first train puffs from Bombay to Thane. Coal smoke everywhere.'},
- {y:1882, chip:'Electric light', title:'Electric light', text:'Edison opens the first coal power station in New York. Wires carry light into homes and streets. The power station burns coal day and night.'},
+ {y:1882, chip:'Electric light', title:'Electric light', text:'Edison opens the first coal power station in New York, and wires carry light into homes and streets. In 1905 Bengaluru becomes the first city in Asia with electric street lights, powered not by coal but by the Shivanasamudra waterfalls.'},
  {y:1908, chip:'Cars', title:'Cars for everyone', text:'Henry Ford\'s factory turns out a cheap car every few minutes. Petrol comes from oil, which is also ancient sunshine: tiny sea creatures buried for 100 million years.'},
  {y:1950, chip:'Speed-up', title:'The great speed-up', text:'2.5 billion people. Aeroplanes, plastics, concrete cities, fridges, tractors. Everything gets faster. Look what the line does.'},
  {y:1958, chip:'Counting', title:'Someone starts counting', text:'Charles Keeling begins measuring CO₂ on a volcano in Hawaii: 315 ppm. He measures every single day. The line has climbed every year since.'},
@@ -1603,10 +1693,10 @@ const fnum = n => Number.isInteger(n)? n : n.toFixed(1);
 function renderBoard(){
   $('#rows').innerHTML = LEVERS.map(l => {
     const v=leverValue(l.id), done=leverDone(l.id);
-    const chips = TOOLS[l.id].map((t,i)=>`<button class="chip ${GAME.on[l.id].has(i)? 'on '+t.r : ''} ${GAME.sel && GAME.sel[0]===l.id && GAME.sel[1]===i ? 'sel':''}" data-id="${l.id}" data-i="${i}" style="flex:${t.share} ${t.share} 0" title="${t.nm}: ${l.sink?'+':'−'}${t.share}"><span class="top"><span class="ico">${t.ico}</span><span class="n">${l.sink?'+':'−'}${t.share}</span></span><span class="nm">${t.short}</span></button>`).join('');
+    const chips = TOOLS[l.id].map((t,i)=>`<button class="tchip ${GAME.on[l.id].has(i)? 'on '+t.r : ''} ${GAME.sel && GAME.sel[0]===l.id && GAME.sel[1]===i ? 'sel':''}" data-id="${l.id}" data-i="${i}" style="flex:${t.share} ${t.share} 0" title="${t.nm}: ${l.sink?'+':'−'}${t.share}"><span class="top"><span class="ico">${t.ico}</span><span class="n">${l.sink?'+':'−'}${t.share}</span></span><span class="nm">${t.short}</span></button>`).join('');
     return `<div class="row ${done?'done':''}"><div class="row-h"><span class="ico">${l.icon}</span><span class="nm">${l.name}</span><span class="rv">${l.sink? '+'+fnum(v) : fnum(v)}<small>${l.sink? 'of +'+l.val : 'today '+l.val}</small></span></div><div class="bar">${chips}</div></div>`;
   }).join('');
-  $$('#rows .chip').forEach(b => b.onclick = () => toggleTool(b.dataset.id, +b.dataset.i));
+  $$('#rows .tchip').forEach(b => b.onclick = () => toggleTool(b.dataset.id, +b.dataset.i));
   renderDetail();
 }
 function renderDetail(){
@@ -1685,11 +1775,11 @@ GAME.draw = function(){
   c.textAlign='center';
   ids.forEach((id,i)=>{ const l=LEVERS.find(x=>x.id===id), x=this.srcX(i);
     c.font=`${fontE}px system-ui, "Apple Color Emoji", "Segoe UI Emoji", sans-serif`; c.fillStyle='#0F2238'; c.globalAlpha = this.vals[id]>0? 1 : .45; c.fillText(l.icon, x, H*.79); c.globalAlpha=1;
-    c.font=`700 ${Math.round(H*.017)}px "JetBrains Mono", monospace`; c.fillStyle='#0F2238'; c.fillText(l.canvas, x, H*.84);
+    const lf = Math.round(Math.min(H*.017, W*.024)); c.font=`700 ${lf}px "JetBrains Mono", monospace`; c.fillStyle='#0F2238'; c.fillText(W<560 ? (l.canvas==='Factories'?'Factory':l.canvas==='Cut trees'?'Cutting':l.canvas) : l.canvas, x, H*.84);
     c.font=`900 ${Math.round(H*.036)}px "Big Shoulders Display","Bebas Neue",Impact,sans-serif`; c.fillStyle= this.vals[id]>0? '#0F2238' : '#2C9C68'; c.fillText(fnum(this.vals[id]), x, H*.885);
   });
-  c.font=`700 ${Math.round(H*.017)}px "JetBrains Mono", monospace`; c.fillStyle='#0F2238';
-  c.fillText('Forests', W*.72, H*.86); c.fillText('The sea', W*.915, H*.86);
+  c.font=`700 ${Math.round(Math.min(H*.017, W*.024))}px "JetBrains Mono", monospace`; c.fillStyle='#0F2238';
+  c.fillText('Forests', W*.72, H*.86); c.fillText(W<560?'Sea':'The sea', W*.915, H*.86);
   c.font=`900 ${Math.round(H*.036)}px "Big Shoulders Display","Bebas Neue",Impact,sans-serif`; c.fillStyle='#EAF7F0';
   c.fillText('−'+fnum(F), W*.72, H*.905); c.fillText('−'+O, W*.915, H*.905);
   c.fillStyle='#3B3F47';
@@ -1825,6 +1915,7 @@ hooks[10] = { enter(){ endFX.start(); }, leave(){ endFX.stop(); } };
 
 $('#btnPrev').disabled = true;
 renderNotes();
+if (hashStop>=2 && hashStop<=N) go(hashStop-1);
 })();
 </script>
 
